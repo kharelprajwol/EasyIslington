@@ -84,6 +84,16 @@ class _GradeCalculatorState extends State<GradeCalculator> {
     });
   }
 
+  void _calculate() {
+    // Add your calculation logic here
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectModule();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -142,6 +152,10 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       onPressed: _removeModuleRow,
                       child: Text('Remove'),
                     ),
+                    ElevatedButton(
+                      onPressed: _calculate,
+                      child: Text('Calculate'),
+                    ),
                   ],
                 ),
               ],
@@ -180,6 +194,10 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       onPressed: _removeYearRow,
                       child: Text('Remove'),
                     ),
+                    ElevatedButton(
+                      onPressed: _calculate,
+                      child: Text('Calculate'),
+                    ),
                   ],
                 ),
               ],
@@ -210,6 +228,10 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                     ElevatedButton(
                       onPressed: _removeClassificationRow,
                       child: Text('Remove'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _calculate,
+                      child: Text('Calculate'),
                     ),
                   ],
                 ),

@@ -19,7 +19,7 @@ Future<List<Schedule>> getSchedule(BuildContext context) async {
     final student = studentProvider.student;
 
     http.Response res = await http.post(
-      Uri.parse('http://192.168.1.125:3000/api/schedule'),
+      Uri.parse('http://192.168.0.104:3000/api/schedule'),
       body: jsonEncode({
         "specialization": student.specialization,
         "year": student.year,

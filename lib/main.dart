@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
       ),
       //
       onGenerateRoute: (settings) => generateRoutes(settings),
-      //home: SigninScreen(),
+      home: SigninScreen(),
       //home: ScheduleTile(),
-      home: GradeCalculatorPage(),
+      //home: GradeCalculatorPage(),
     );
   }
 }
