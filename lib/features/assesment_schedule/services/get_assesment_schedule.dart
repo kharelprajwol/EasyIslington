@@ -14,7 +14,7 @@ Future<List<Assessment>> getAssessmentData(BuildContext context) async {
     final student = studentProvider.student;
     print(student.specialization);
     final response = await http.post(
-      Uri.parse('http://100.64.213.37:3000/api/assesmentschedule'),
+      Uri.parse('http://192.168.1.125:3000/api/assesmentschedule'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -18,13 +18,16 @@ class GradeCalculator extends StatefulWidget {
 class _GradeCalculatorState extends State<GradeCalculator> {
   bool _moduleSelected = false;
   bool _yearSelected = false;
+  bool _classificationSelected = false;
   int _moduleRows = 2;
   int _yearRows = 2;
+  int _classificationRows = 2;
 
   void _selectModule() {
     setState(() {
       _moduleSelected = true;
       _yearSelected = false;
+      _classificationSelected = false;
     });
   }
 
@@ -32,6 +35,15 @@ class _GradeCalculatorState extends State<GradeCalculator> {
     setState(() {
       _yearSelected = true;
       _moduleSelected = false;
+      _classificationSelected = false;
+    });
+  }
+
+  void _selectClassification() {
+    setState(() {
+      _classificationSelected = true;
+      _moduleSelected = false;
+      _yearSelected = false;
     });
   }
 
@@ -44,6 +56,31 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   void _addYearRow() {
     setState(() {
       _yearRows += 1;
+    });
+  }
+
+  void _addClassificationRow() {
+    setState(() {
+      _classificationRows += 1;
+    });
+  }
+
+  void _removeModuleRow() {
+    setState(() {
+      _moduleRows = _moduleRows > 0 ? _moduleRows - 1 : 0;
+    });
+  }
+
+  void _removeYearRow() {
+    setState(() {
+      _yearRows = _yearRows > 0 ? _yearRows - 1 : 0;
+    });
+  }
+
+  void _removeClassificationRow() {
+    setState(() {
+      _classificationRows =
+          _classificationRows > 0 ? _classificationRows - 1 : 0;
     });
   }
 
@@ -66,9 +103,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                 child: Text('Year'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  // Add logic for Classification button
-                },
+                onPressed: _selectClassification,
                 child: Text('Classification'),
               ),
             ],
@@ -85,9 +120,18 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   ],
                 ),
                 for (int i = 0; i < _moduleRows; i++) buildModuleRow(i),
-                ElevatedButton(
-                  onPressed: _addModuleRow,
-                  child: Text('Add'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _addModuleRow,
+                      child: Text('Add'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _removeModuleRow,
+                      child: Text('Remove'),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -103,9 +147,38 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   ],
                 ),
                 for (int i = 0; i < _yearRows; i++) buildYearRow(i),
-                ElevatedButton(
-                  onPressed: _addYearRow,
-                  child: Text('Add'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _addYearRow,
+                      child: Text('Add'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _removeYearRow,
+                      child: Text('Remove'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          if (_classificationSelected)
+            Column(
+              children: [
+                for (int i = 0; i < _classificationRows; i++)
+                  buildClassificationRow(i),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _addClassificationRow,
+                      child: Text('Add'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _removeClassificationRow,
+                      child: Text('Remove'),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -161,6 +234,22 @@ class _GradeCalculatorState extends State<GradeCalculator> {
         Expanded(
           child: TextField(
             decoration: InputDecoration(labelText: 'Marks'),
+          ),
+        ),
+        SizedBox(width: 10),
+      ],
+    );
+  }
+
+  Row buildClassificationRow(int i) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text('Year ${i + 1}'),
+        SizedBox(width: 10),
+        Expanded(
+          child: TextField(
+            decoration: InputDecoration(labelText: 'Enter value'),
           ),
         ),
         SizedBox(width: 10),
