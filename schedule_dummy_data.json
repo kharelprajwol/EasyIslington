@@ -1,0 +1,109 @@
+[{
+    "specialization_name": "BSc (Hons) Computing",
+    "years": [
+      {
+        "year_number": 3,
+        "semesters": [
+          {
+            "semester_number": "2",
+            "sections": [
+              {
+                "section_name": "C12",
+                "days": [
+                  {
+                    "day_name": "Sunday",
+                    "classes": [
+                      {
+                        "module_title": "Application Development",
+                        "instructor_name": "Samyush Maharjan",
+                        "room": "Lab-11",
+                        "block": "Skill Block",
+                        "start_time": "7:00 AM",
+                        "end_time": "9:00 AM",
+                        "class_type": "Workshop"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Monday",
+                    "classes": [
+                      {
+                        "module_title": "Advanced Database",
+                        "instructor_name": "Biwash Adhikari",
+                        "room": "TR02",
+                        "block": "Nepal Block",
+                        "start_time": "9:00 AM",
+                        "end_time": "11:30 AM",
+                        "class_type": "Workshop"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Wednesday",
+                    "classes": [
+                      {
+                        "module_title": "Work Related Learning",
+                        "instructor_name": "Umesh Nepal",
+                        "room": "LT-03",
+                        "block": "London Block",
+                        "start_time": "8:00 AM",
+                        "end_time": "9:00 AM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Thursday",
+                    "classes": [
+                      {
+                        "module_title": "Application Development",
+                        "instructor_name": "Himalaya Sunuwar",
+                        "room": "Hall-2",
+                        "block": "Kumari Block",
+                        "start_time": "8:30 AM",
+                        "end_time": "10:00 AM",
+                        "class_type": "Lecture"
+                      },
+                      {
+                        "module_title": "Application Development",
+                        "instructor_name": "Himalaya Sunuwar",
+                        "room": "Hall-2",
+                        "block": "Kumari Block",
+                        "start_time": "8:30 AM",
+                        "end_time": "10:00 AM",
+                        "class_type": "Lecture"
+                      },
+                      {
+                        "module_title": "Application Development",
+                        "instructor_name": "Himalaya Sunuwar",
+                        "room": "Hall-2",
+                        "block": "Kumari Block",
+                        "start_time": "8:30 AM",
+                        "end_time": "10:00 AM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Friday",
+                    "classes": [
+                      {
+                        "module_title": "Application Database",
+                        "instructor_name": "Rohit Pandey",
+                        "room": "Hall-2",
+                        "block": "Kumari Block",
+                        "start_time": "7:80 AM",
+                        "end_time": "8:30 AM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }]
+  

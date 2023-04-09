@@ -1,0 +1,108 @@
+{
+    "specialization_name": "BSc (Hons) Computing",
+    "years": [
+      {
+        "year_number": "3",
+        "modules": [
+          {
+            "module_title": "Introduction to Computer Science",
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "percentage_weight": "20",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2022-06-01"
+              },
+              {
+                "name": "Midterm Exam",
+                "percentage_weight": "30",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2022-07-01"
+              },
+              {
+                "name": "Final Exam",
+                "percentage_weight": "50",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2022-08-01"
+              }
+            ]
+          },
+          {
+            "module_title": "Data Structures and Algorithms",
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "percentage_weight": "20",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2022-06-01"
+              },
+              {
+                "name": "Midterm Exam",
+                "percentage_weight": "30",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2022-07-01"
+              },
+              {
+                "name": "Final Exam",
+                "percentage_weight": "50",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2022-08-01"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "year_number": "2",
+        "modules": [
+          {
+            "module_title": "Database Systems",
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "percentage_weight": "20",
+                "coursework_submission_deadline": "2023-05-01",
+                "exam_date": "2023-06-01"
+              },
+              {
+                "name": "Midterm Exam",
+                "percentage_weight": "30",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2023-07-01"
+              },
+              {
+                "name": "Final Exam",
+                "percentage_weight": "50",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2023-08-01"
+              }
+            ]
+          },
+          {
+            "module_title": "Operating Systems",
+            "assessments": [
+              {
+                "name": "Assignment 1",
+                "percentage_weight": "20",
+                "coursework_submission_deadline": "2023-05-01",
+                "exam_date": "2023-06-01"
+              },
+              {
+                "name": "Midterm Exam",
+                "percentage_weight": "30",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2023-07-01"
+              },
+              {
+                "name": "Final Exam",
+                "percentage_weight": "50",
+                "coursework_submission_deadline": "2022-05-01",
+                "exam_date": "2023-08-01"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

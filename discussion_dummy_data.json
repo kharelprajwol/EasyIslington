@@ -1,0 +1,38 @@
+[
+    {
+        "specialization": "Programming",
+        "posts": [
+            {
+                "title": "Best IDE for Python",
+                "body": "What is the best IDE for Python?",
+                "author": "Jane Doe",
+                "date": "2022-03-31",
+                "comments": [
+                    {
+                        "body": "I prefer PyCharm",
+                        "author": "John Smith",
+                        "date": "2022-03-31"
+                    },
+                    {
+                        "body": "I use VSCode",
+                        "author": "Sarah Johnson",
+                        "date": "2022-03-31"
+                    }
+                ]
+            },
+            {
+                "title": "Error in my Java code",
+                "body": "I'm getting an error in my Java code, can someone help?",
+                "author": "Bob Lee",
+                "date": "2022-03-30",
+                "comments": [
+                    {
+                        "body": "What's the error message?",
+                        "author": "Alice Chen",
+                        "date": "2022-03-31"
+                    }
+                ]
+            }
+        ]
+    }
+]
