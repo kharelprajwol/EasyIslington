@@ -123,6 +123,17 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    Text('Target'),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(labelText: 'Enter value'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
                     ElevatedButton(
                       onPressed: _addModuleRow,
                       child: Text('Add'),
@@ -150,6 +161,17 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    Text('Target'),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(labelText: 'Enter value'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
                     ElevatedButton(
                       onPressed: _addYearRow,
                       child: Text('Add'),
@@ -167,6 +189,17 @@ class _GradeCalculatorState extends State<GradeCalculator> {
               children: [
                 for (int i = 0; i < _classificationRows; i++)
                   buildClassificationRow(i),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Target'),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(labelText: 'Enter value'),
+                      ),
+                    ),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
