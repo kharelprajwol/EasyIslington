@@ -244,7 +244,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            labelText: 'Target Mark (optional)',
+                            labelText: 'Target Mark',
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -283,7 +283,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            labelText: 'Target Mark (optional)',
+                            labelText: 'Target Mark',
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -311,7 +311,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                            labelText: 'Target Mark (optional)',
+                            labelText: 'Target Mark',
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -446,6 +446,9 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   Text('Add'),
                 ],
               ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.teal,
+              ),
             ),
             SizedBox(width: 10), // Add some space between buttons
             ElevatedButton(
@@ -457,6 +460,9 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   Text('Remove'),
                 ],
               ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.teal,
+              ),
             ),
             SizedBox(width: 10), // Add some space between buttons
             ElevatedButton(
@@ -467,6 +473,9 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   SizedBox(width: 5), // Add some space between icon and text
                   Text('Clear'),
                 ],
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.teal,
               ),
             ),
           ],
@@ -483,6 +492,9 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   SizedBox(width: 5), // Add some space between icon and text
                   Text('Calculate'),
                 ],
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.teal,
               ),
             ),
           ],
