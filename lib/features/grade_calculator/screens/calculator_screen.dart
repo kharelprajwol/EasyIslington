@@ -26,7 +26,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   int _moduleRows = 2;
   int _yearRows = 2;
   int _classificationRows = 2;
-  double _moduleResult = 70.0;
+  double _moduleResult = 0.0;
   double _yearResult = 0.0;
   double _classificationResult = 0.0;
 
@@ -112,7 +112,40 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   }
 
   void _calculate() {
+    print('hello');
     // Add your calculation logic here
+    if (_moduleSelected) {
+      double totalWeight = 0.0;
+      double weightedSum = 0.0;
+      print('inside calculate');
+
+      for (int i = 0; i < _moduleCourseworkControllers.length; i++) {
+        // double coursework =
+        //     double.tryParse(_moduleCourseworkControllers[i].text) ?? 0.0;
+        double weight =
+            double.tryParse(_moduleWeightControllers[i].text) ?? 0.0;
+        double mark = double.tryParse(_moduleMarkControllers[i].text) ?? 0.0;
+
+        weightedSum += weight * mark;
+        totalWeight += weight;
+      }
+
+      if (totalWeight != 0.0) {
+        setState(() {
+          _moduleResult = weightedSum / totalWeight;
+        });
+
+        if (_moduleTargetController.text.isNotEmpty) {
+          double target = double.tryParse(_moduleTargetController.text) ?? 0.0;
+          double remainingWeight = 100 - totalWeight;
+          setState(() {
+            _moduleRequiredMark =
+                ((target * (totalWeight + remainingWeight) - weightedSum)) /
+                    remainingWeight;
+          });
+        }
+      }
+    }
   }
 
   void _clear() {
@@ -422,7 +455,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
           SizedBox(
             height: 10,
           ),
-          Text('Result will appear here'),
+          Text('Results will appear here'),
           SizedBox(
             height: 10,
           ),
@@ -431,7 +464,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Your average mark:',
+                  'Your average mark: $_moduleResult',
                   style: TextStyle(fontSize: 25, color: Colors.green.shade900),
                 ),
                 Text(
@@ -445,8 +478,9 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 10),
                       Text(
-                        'Required average mark to meet target:',
+                        'Required average mark to meet target: $_moduleRequiredMark',
                         style:
                             TextStyle(fontSize: 25, color: Colors.red.shade900),
                       ),
@@ -643,7 +677,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ElevatedButton(
-              onPressed: onCalculate,
+              onPressed: _calculate,
               child: Row(
                 children: [
                   Icon(Icons.calculate), // Add icon
