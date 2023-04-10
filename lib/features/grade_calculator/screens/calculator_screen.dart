@@ -26,9 +26,13 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   int _moduleRows = 2;
   int _yearRows = 2;
   int _classificationRows = 2;
-  double _moduleResult = 75.0;
+  double _moduleResult = 70.0;
   double _yearResult = 0.0;
   double _classificationResult = 0.0;
+
+  double _moduleRequiredMark = 0.0;
+  double _yearRequiredMark = 0.0;
+  double _classificationRequiredMark = 0.0;
 
   List<TextEditingController> _moduleCourseworkControllers = [];
   List<TextEditingController> _moduleWeightControllers = [];
@@ -40,6 +44,11 @@ class _GradeCalculatorState extends State<GradeCalculator> {
 
   List<TextEditingController> _classificationYearMarkControllers = [];
   List<TextEditingController> _classificationWeightControllers = [];
+
+  TextEditingController _moduleTargetController = TextEditingController();
+  TextEditingController _yearTargetController = TextEditingController();
+  TextEditingController _classificationTargetController =
+      TextEditingController();
 
   void _selectModule() {
     setState(() {
@@ -107,36 +116,49 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   }
 
   void _clear() {
-    // Clear module text controllers
-    for (final controller in _moduleCourseworkControllers) {
-      controller.clear();
+    if (_moduleSelected) {
+      // Clear module text controllers
+      for (final controller in _moduleCourseworkControllers) {
+        controller.clear();
+      }
+      for (final controller in _moduleWeightControllers) {
+        controller.clear();
+      }
+      for (final controller in _moduleMarkControllers) {
+        controller.clear();
+      }
+      setState(() {
+        _moduleResult = 0.0;
+        _moduleRequiredMark = 0.0;
+      });
+    } else if (_yearSelected) {
+      // Clear year text controllers
+      for (final controller in _yearModuleControllers) {
+        controller.clear();
+      }
+      for (final controller in _yearCreditControllers) {
+        controller.clear();
+      }
+      for (final controller in _yearMarkControllers) {
+        controller.clear();
+      }
+      setState(() {
+        _yearResult = 0.0;
+        _yearRequiredMark = 0.0;
+      });
+    } else if (_classificationSelected) {
+      // Clear classification text controllers
+      for (final controller in _classificationWeightControllers) {
+        controller.clear();
+      }
+      for (final controller in _classificationYearMarkControllers) {
+        controller.clear();
+      }
+      setState(() {
+        _classificationResult = 0.0;
+        _classificationRequiredMark = 0.0;
+      });
     }
-    for (final controller in _moduleWeightControllers) {
-      controller.clear();
-    }
-    for (final controller in _moduleMarkControllers) {
-      controller.clear();
-    }
-
-    // Clear year text controllers
-    for (final controller in _yearModuleControllers) {
-      controller.clear();
-    }
-    for (final controller in _yearCreditControllers) {
-      controller.clear();
-    }
-    for (final controller in _yearMarkControllers) {
-      controller.clear();
-    }
-
-    // Clear classification text controllers
-    for (final controller in _classificationWeightControllers) {
-      controller.clear();
-    }
-    for (final controller in _classificationYearMarkControllers) {
-      controller.clear();
-    }
-
     // Clear any other TextField controllers, if applicable
   }
 
@@ -310,6 +332,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _moduleTargetController,
                               decoration: InputDecoration(
                                 labelText: 'Target Mark',
                                 border: OutlineInputBorder(),
@@ -349,6 +372,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _yearTargetController,
                               decoration: InputDecoration(
                                 labelText: 'Target Mark',
                                 border: OutlineInputBorder(),
@@ -379,6 +403,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _classificationTargetController,
                               decoration: InputDecoration(
                                 labelText: 'Target Mark',
                                 border: OutlineInputBorder(),
@@ -401,7 +426,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
           SizedBox(
             height: 10,
           ),
-          if (_moduleResult > 0.0)
+          if (_moduleSelected && _moduleResult > 0.0)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -416,6 +441,17 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                     color: Colors.green.shade900,
                   ),
                 ),
+                if (_moduleTargetController.text.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Required average mark to meet target:',
+                        style:
+                            TextStyle(fontSize: 25, color: Colors.red.shade900),
+                      ),
+                    ],
+                  ),
               ],
             ),
         ],
