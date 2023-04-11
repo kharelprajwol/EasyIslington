@@ -130,7 +130,7 @@ class DashboardScreen extends StatelessWidget {
               builder: (context, studentProvider, child) {
                 final student = studentProvider.student;
                 return DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
+                  decoration: BoxDecoration(color: Colors.red.shade900),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -159,12 +159,25 @@ class DashboardScreen extends StatelessWidget {
                 );
               },
             ),
-            ListTile(
+            ExpansionTile(
               leading: Icon(Icons.grade),
-              title: Text('GradeHub'),
-              onTap: () {
-                // Handle GradeHub button press
-              },
+              title: Text('Grades'),
+              children: [
+                ListTile(
+                  //leading: Icon(Icons.star),
+                  title: Text('GradeHub'),
+                  onTap: () {
+                    // Handle GradeHub button press
+                  },
+                ),
+                ListTile(
+                  //leading: Icon(Icons.calculate),
+                  title: Text('Grade Calculator'),
+                  onTap: () {
+                    // Handle Grade Calculator button press
+                  },
+                ),
+              ],
             ),
             ExpansionTile(
               leading: Icon(Icons.schedule),
