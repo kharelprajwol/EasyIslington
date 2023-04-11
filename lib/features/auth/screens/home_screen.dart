@@ -130,15 +130,31 @@ class DashboardScreen extends StatelessWidget {
               builder: (context, studentProvider, child) {
                 final student = studentProvider.student;
                 return DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                  child: Text(
-                    'Welcome ${student.firstName}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                    ),
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.person,
+                        size: 50.0,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        student.email,
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      //SizedBox(height: 5),
+                      TextButton(
+                        onPressed: () {
+                          // Handle the "Update your profile" button press
+                        },
+                        child: Text(
+                          'Update your profile',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },

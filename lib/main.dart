@@ -3,6 +3,7 @@ import 'package:easy_islington/providers/class_schedule_provider.dart';
 import 'package:easy_islington/providers/student_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'features/auth/screens/home_screen.dart';
 import 'features/auth/screens/signup_screen.dart';
 import 'features/auth/screens/signin_screen.dart';
 import 'package:easy_islington/router.dart';
@@ -39,9 +40,9 @@ class MyApp extends StatelessWidget {
       ),
       //
       onGenerateRoute: (settings) => generateRoutes(settings),
-      //home: SigninScreen(),
-      //home: ScheduleTile(),
-      home: GradeCalculatorPage(),
+      home: SigninScreen(),
+      //home: DashboardScreen(),
+      //home: GradeCalculatorPage(),
     );
   }
 }

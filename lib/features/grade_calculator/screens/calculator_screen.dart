@@ -112,7 +112,6 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   }
 
   void _calculate() {
-    print('hello');
     // Add your calculation logic here
     if (_moduleSelected) {
       double totalWeight = 0.0;
@@ -145,6 +144,62 @@ class _GradeCalculatorState extends State<GradeCalculator> {
           });
         }
       }
+    } else if (_yearSelected) {
+      double totalCredits = 0.0;
+      double weightedSum = 0.0;
+
+      for (int i = 0; i < _yearModuleControllers.length; i++) {
+        //double module = double.tryParse(_yearModuleControllers[i].text) ?? 0.0;
+        double credit = double.tryParse(_yearCreditControllers[i].text) ?? 0.0;
+        double mark = double.tryParse(_yearMarkControllers[i].text) ?? 0.0;
+
+        weightedSum += credit * mark;
+        totalCredits += credit;
+      }
+
+      if (totalCredits != 0.0) {
+        setState(() {
+          _yearResult = weightedSum / totalCredits;
+        });
+
+        if (_yearTargetController.text.isNotEmpty) {
+          double target = double.tryParse(_yearTargetController.text) ?? 0.0;
+          double remainingCredit = 120 - totalCredits;
+          setState(() {
+            _yearRequiredMark =
+                ((target * (totalCredits + remainingCredit) - weightedSum)) /
+                    remainingCredit;
+          });
+        }
+      }
+    } else if (_classificationSelected) {
+      double totalWeight = 0.0;
+      double weightedSum = 0.0;
+
+      for (int i = 0; i < _classificationWeightControllers.length; i++) {
+        double weight =
+            double.tryParse(_classificationWeightControllers[i].text) ?? 0.0;
+        double yearMark =
+            double.tryParse(_classificationYearMarkControllers[i].text) ?? 0.0;
+
+        weightedSum += weight * yearMark;
+        totalWeight += weight;
+      }
+
+      if (totalWeight != 0.0) {
+        _classificationResult = weightedSum / totalWeight;
+
+        if (_classificationTargetController.text.isNotEmpty) {
+          double target =
+              double.tryParse(_classificationTargetController.text) ?? 0.0;
+          double remainingweight = 100 - totalWeight;
+          setState(() {
+            _classificationRequiredMark =
+                ((target * (totalWeight + remainingweight) - weightedSum)) /
+                    remainingweight;
+          });
+        }
+      }
     }
   }
 
@@ -160,6 +215,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
       for (final controller in _moduleMarkControllers) {
         controller.clear();
       }
+      _moduleTargetController.clear();
       setState(() {
         _moduleResult = 0.0;
         _moduleRequiredMark = 0.0;
@@ -175,6 +231,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
       for (final controller in _yearMarkControllers) {
         controller.clear();
       }
+      _yearTargetController.clear();
       setState(() {
         _yearResult = 0.0;
         _yearRequiredMark = 0.0;
@@ -187,6 +244,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
       for (final controller in _classificationYearMarkControllers) {
         controller.clear();
       }
+      _classificationTargetController.clear();
       setState(() {
         _classificationResult = 0.0;
         _classificationRequiredMark = 0.0;
@@ -481,6 +539,50 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       SizedBox(height: 10),
                       Text(
                         'Required average mark to meet target: $_moduleRequiredMark',
+                        style: TextStyle(
+                            fontSize: 25, color: Colors.green.shade900),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          if (_yearSelected && _yearResult > 0.0)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your average mark: $_yearResult',
+                  style: TextStyle(fontSize: 25, color: Colors.green.shade900),
+                ),
+                if (_yearTargetController.text.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Text(
+                        'Required average mark to meet target: $_yearRequiredMark',
+                        style: TextStyle(
+                            fontSize: 25, color: Colors.green.shade900),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          if (_classificationSelected && _classificationResult > 0.0)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your average mark: $_classificationResult',
+                  style: TextStyle(fontSize: 25, color: Colors.green.shade900),
+                ),
+                if (_classificationTargetController.text.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Text(
+                        'Required average mark to meet target: $_classificationRequiredMark',
                         style: TextStyle(
                             fontSize: 25, color: Colors.green.shade900),
                       ),
