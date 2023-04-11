@@ -1,3 +1,4 @@
+import 'package:easy_islington/features/gradehub/screens/year_screen.dart';
 import 'package:easy_islington/providers/assessment_schedule_provider.dart';
 import 'package:easy_islington/providers/class_schedule_provider.dart';
 import 'package:easy_islington/providers/student_provider.dart';
@@ -10,6 +11,7 @@ import 'package:easy_islington/router.dart';
 
 import 'features/discussions/Screens/discussions_screen.dart';
 import 'features/grade_calculator/screens/calculator_screen.dart';
+
 import 'features/timetable/screens/schedule_screen.dart';
 import 'features/timetable/widgets/schedule_tile.dart';
 
@@ -42,7 +44,8 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) => generateRoutes(settings),
       //home: SigninScreen(),
       //home: DashboardScreen(),
-      home: GradeCalculatorPage(),
+      //home: GradeCalculatorPage(),
+      home: YearScreen(),
     );
   }
 }
