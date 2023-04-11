@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+
+class CourseworkData {
+  final String coursework;
+  final double achievedMarks;
+  final double lostMarks;
+
+  CourseworkData(this.coursework, this.achievedMarks, this.lostMarks);
+}
+
+List<CourseworkData> courseworkDataList = [];
 
 class GradeCalculatorPage extends StatelessWidget {
   @override
@@ -49,6 +60,8 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   TextEditingController _yearTargetController = TextEditingController();
   TextEditingController _classificationTargetController =
       TextEditingController();
+
+  final ScrollController _scrollController = ScrollController();
 
   void _selectModule() {
     setState(() {
@@ -111,7 +124,43 @@ class _GradeCalculatorState extends State<GradeCalculator> {
     });
   }
 
+  Widget _buildBarChart(List<CourseworkData> courseworkDataList) {
+    List<charts.Series<CourseworkData, String>> _createChartData() {
+      return [
+        charts.Series<CourseworkData, String>(
+          id: 'AchievedMarks',
+          domainFn: (CourseworkData data, _) => data.coursework,
+          measureFn: (CourseworkData data, _) => data.achievedMarks,
+          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+          data: courseworkDataList,
+        ),
+        charts.Series<CourseworkData, String>(
+          id: 'LostMarks',
+          domainFn: (CourseworkData data, _) => data.coursework,
+          measureFn: (CourseworkData data, _) => data.lostMarks,
+          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+          data: courseworkDataList,
+        ),
+      ];
+    }
+
+    return charts.BarChart(
+      _createChartData(),
+      animate: true,
+      barGroupingType: charts.BarGroupingType.grouped,
+      vertical: true,
+      behaviors: [
+        charts.SeriesLegend(
+          position: charts.BehaviorPosition.end,
+          outsideJustification: charts.OutsideJustification.endDrawArea,
+          horizontalFirst: false,
+        ),
+      ],
+    );
+  }
+
   void _calculate() {
+    FocusScope.of(context).unfocus();
     // Add your calculation logic here
     if (_moduleSelected) {
       double totalWeight = 0.0;
@@ -119,11 +168,12 @@ class _GradeCalculatorState extends State<GradeCalculator> {
       print('inside calculate');
 
       for (int i = 0; i < _moduleCourseworkControllers.length; i++) {
-        // double coursework =
-        //     double.tryParse(_moduleCourseworkControllers[i].text) ?? 0.0;
+        String coursework = _moduleCourseworkControllers[i].text;
         double weight =
             double.tryParse(_moduleWeightControllers[i].text) ?? 0.0;
         double mark = double.tryParse(_moduleMarkControllers[i].text) ?? 0.0;
+
+        courseworkDataList.add(CourseworkData(coursework, mark, 100 - mark));
 
         weightedSum += weight * mark;
         totalWeight += weight;
@@ -201,6 +251,14 @@ class _GradeCalculatorState extends State<GradeCalculator> {
         }
       }
     }
+    Future.delayed(Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(
+            milliseconds: 500), // Choose the duration that suits your needs
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   void _clear() {
@@ -216,6 +274,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
         controller.clear();
       }
       _moduleTargetController.clear();
+      courseworkDataList.clear();
       setState(() {
         _moduleResult = 0.0;
         _moduleRequiredMark = 0.0;
@@ -280,6 +339,7 @@ class _GradeCalculatorState extends State<GradeCalculator> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -544,6 +604,10 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       ),
                     ],
                   ),
+                Container(
+                    height: 300,
+                    width: double.infinity,
+                    child: _buildBarChart(courseworkDataList))
               ],
             ),
           if (_yearSelected && _yearResult > 0.0)
