@@ -481,8 +481,8 @@ class _GradeCalculatorState extends State<GradeCalculator> {
                       SizedBox(height: 10),
                       Text(
                         'Required average mark to meet target: $_moduleRequiredMark',
-                        style:
-                            TextStyle(fontSize: 25, color: Colors.red.shade900),
+                        style: TextStyle(
+                            fontSize: 25, color: Colors.green.shade900),
                       ),
                     ],
                   ),
