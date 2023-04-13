@@ -1,3 +1,4 @@
+import 'package:easy_islington/features/grade_calculator/screens/calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,10 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get today's date
     final today = DateFormat('EEEE').format(DateTime.now());
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    double fontSize = screenWidth > 400 ? 20 : 15;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +29,7 @@ class DashboardScreen extends StatelessWidget {
             style: GoogleFonts.openSans(
               textStyle: TextStyle(
                 fontFamily: 'Kalam',
-                fontSize: 30,
+                fontSize: fontSize + 10,
               ),
             )),
         backgroundColor: Colors.red.shade900,
@@ -34,8 +39,8 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: screenHeight * 0.01,
             ),
             Container(
               padding: const EdgeInsets.all(10.0),
@@ -45,14 +50,9 @@ class DashboardScreen extends StatelessWidget {
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Kalam',
-                      fontSize: 20,
+                      fontSize: fontSize,
                     ),
-                  )
-                  // style: Theme.of(context).textTheme.headline6?.copyWith(
-                  //       color: Colors
-                  //           .white, // set the text color to contrast with the background color
-                  //     ),
-                  ),
+                  )),
             ),
             Consumer<ClassScheduleProvider>(
               builder: (context, classScheduleProvider, child) {
@@ -74,8 +74,8 @@ class DashboardScreen extends StatelessWidget {
                     : Text('No classes today');
               },
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: screenHeight * 0.01,
             ),
             Container(
               padding: const EdgeInsets.all(10.0),
@@ -85,39 +85,10 @@ class DashboardScreen extends StatelessWidget {
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Kalam',
-                      fontSize: 20,
+                      fontSize: fontSize,
                     ),
-                  )
-                  // style: Theme.of(context).textTheme.headline6?.copyWith(
-                  //       color: Colors
-                  //           .white, // set the text color to contrast with the background color
-                  //     ),
-                  ),
+                  )),
             ),
-            // Expanded(
-            //   child: Consumer<StudentProvider>(
-            //     builder: (context, studentProvider, child) {
-            //       final student = studentProvider.student;
-            //       final assessments = student.upcomingAssessments;
-            //       return assessments.isNotEmpty
-            //           ? Expanded(
-            //               child: ListView.builder(
-            //                 itemCount: assessments.length,
-            //                 itemBuilder: (context, index) {
-            //                   final assessment = assessments[index];
-            //                   return ListTile(
-            //                     title: Text(assessment.title),
-            //                     subtitle: Text(assessment.date),
-            //                   );
-            //                 },
-            //               ),
-            //             )
-            //           : Center(
-            //               child: Text('No upcoming assessments'),
-            //             );
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -161,20 +132,48 @@ class DashboardScreen extends StatelessWidget {
             ),
             ExpansionTile(
               leading: Icon(Icons.grade),
-              title: Text('Grades'),
+              title: Text(
+                'Grades',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontFamily: 'Kalam',
+                    fontSize: fontSize,
+                  ),
+                ),
+              ),
               children: [
                 ListTile(
                   //leading: Icon(Icons.star),
-                  title: Text('GradeHub'),
+                  title: Text(
+                    'GradeHub',
+                    style: GoogleFonts.openSans(
+                      textStyle: TextStyle(
+                        fontFamily: 'Kalam',
+                        fontSize: fontSize - 5,
+                      ),
+                    ),
+                  ),
                   onTap: () {
                     // Handle GradeHub button press
                   },
                 ),
                 ListTile(
                   //leading: Icon(Icons.calculate),
-                  title: Text('Grade Calculator'),
+                  title: Text(
+                    'Grade Calculator',
+                    style: GoogleFonts.openSans(
+                      textStyle: TextStyle(
+                        fontFamily: 'Kalam',
+                        fontSize: fontSize - 5,
+                      ),
+                    ),
+                  ),
                   onTap: () {
-                    // Handle Grade Calculator button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GradeCalculatorPage()),
+                    );
                   },
                 ),
               ],
@@ -185,7 +184,7 @@ class DashboardScreen extends StatelessWidget {
                   style: GoogleFonts.openSans(
                     textStyle: TextStyle(
                       fontFamily: 'Kalam',
-                      fontSize: 20,
+                      fontSize: fontSize,
                     ),
                   )),
               children: [
@@ -194,7 +193,7 @@ class DashboardScreen extends StatelessWidget {
                       style: GoogleFonts.openSans(
                         textStyle: TextStyle(
                           fontFamily: 'Kalam',
-                          fontSize: 15,
+                          fontSize: fontSize - 5,
                         ),
                       )),
                   onTap: () {
@@ -210,7 +209,7 @@ class DashboardScreen extends StatelessWidget {
                       style: GoogleFonts.openSans(
                         textStyle: TextStyle(
                           fontFamily: 'Kalam',
-                          fontSize: 15,
+                          fontSize: fontSize - 5,
                         ),
                       )),
                   onTap: () {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-//import 'package:flutter_frontend/auth/screens/confirmation_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../timetable/services/schedule_service.dart';
 import '../services/signin_service.dart';
 import 'home_screen.dart';
@@ -10,10 +11,22 @@ class SigninScreen extends StatefulWidget {
   _SigninScreenState createState() => _SigninScreenState();
 }
 
-class _SigninScreenState extends State<SigninScreen> {
+class _SigninScreenState extends State<SigninScreen>
+    with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   late final _emailController = TextEditingController();
   late final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+  }
 
   @override
   void dispose() {
@@ -35,22 +48,19 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    double imageSize = screenWidth / 2;
+    double textFieldPadding = screenWidth / 20;
+    double fontSize = screenWidth > 400 ? 15 : 12;
+
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("EasyIslington",
-      //       style: GoogleFonts.openSans(
-      //         textStyle: TextStyle(
-      //           fontFamily: 'Kalam',
-      //           fontSize: 30,
-      //         ),
-      //       )),
-      //   backgroundColor: Colors.red.shade900,
-      // ),
       body: SingleChildScrollView(
         child: Container(
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(textFieldPadding),
             child: Form(
               key: _formKey,
               child: Column(
@@ -58,14 +68,14 @@ class _SigninScreenState extends State<SigninScreen> {
                 children: [
                   Image.asset(
                     'assets/images/logo.png',
-                    height: 250,
+                    height: imageSize,
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: screenHeight * 0.02),
                   TextFormField(
                     style: GoogleFonts.openSans(
                       textStyle: TextStyle(
                         fontFamily: 'Kalam',
-                        fontSize: 15,
+                        fontSize: fontSize,
                       ),
                     ),
                     keyboardType: TextInputType.text,
@@ -85,7 +95,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       }
                     },
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: screenHeight * 0.02),
                   TextFormField(
                     obscureText: true,
                     decoration: InputDecoration(
@@ -110,7 +120,6 @@ class _SigninScreenState extends State<SigninScreen> {
                       TextButton(
                         onPressed: () {
                           // TODO: Implement forgot password navigation
-                          // You can navigate to the forgot password page using Navigator.push() method
                         },
                         child: Text(
                           "Forgot Password?",
@@ -121,9 +130,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: screenHeight * 0.025),
                   Row(
                     children: [
                       Expanded(
@@ -139,12 +146,12 @@ class _SigninScreenState extends State<SigninScreen> {
                             primary: Colors.blue.shade900,
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(screenHeight * 0.01),
                             child: Text("Sign In",
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
                                     fontFamily: 'Kalam',
-                                    fontSize: 25,
+                                    fontSize: fontSize + 10,
                                   ),
                                 )),
                           ),
@@ -154,18 +161,19 @@ class _SigninScreenState extends State<SigninScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Implement sign up navigation
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => SignUpPage(),
-                      //   ),
-                      // );
+// TODO: Implement sign up navigation
+// Navigator.push(
+// context,
+// MaterialPageRoute(
+// builder: (context) => SignUpPage(),
+// ),
+// );
                     },
                     child: Text(
                       "Don't have an account? Sign up",
                       style: TextStyle(
                         color: Colors.green.shade900,
+                        fontSize: fontSize,
                       ),
                     ),
                   ),

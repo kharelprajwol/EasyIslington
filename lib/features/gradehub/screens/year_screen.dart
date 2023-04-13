@@ -40,12 +40,24 @@ class YearScreen extends StatelessWidget {
                       ),
                       child: Container(
                         padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          year,
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            color: Colors.white,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              year,
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Calculated Value', // Replace this with the actual calculated value
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

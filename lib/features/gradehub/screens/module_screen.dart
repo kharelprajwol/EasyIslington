@@ -14,7 +14,8 @@ class ModuleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('GradeHub'),
+        title: Text(year),
+        backgroundColor: Colors.red.shade900,
       ),
       backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
@@ -23,13 +24,6 @@ class ModuleScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Modules',
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               SizedBox(height: 16.0),
               ...modules.map((module) => Container(
                     margin: EdgeInsets.symmetric(vertical: 8.0),
@@ -43,12 +37,24 @@ class ModuleScreen extends StatelessWidget {
                       ),
                       child: Container(
                         padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          module,
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            color: Colors.white,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              module,
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Calculated Value', // Replace this with the actual calculated value
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -16,7 +16,15 @@ class GradeCalculatorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Grade Calculator')),
+      appBar: AppBar(
+          title: Text('Dashboard',
+              style: GoogleFonts.openSans(
+                textStyle: TextStyle(
+                  fontFamily: 'Kalam',
+                  fontSize: 30,
+                ),
+              )),
+          backgroundColor: Colors.red.shade900),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GradeCalculator(),
