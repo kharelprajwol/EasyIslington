@@ -23,21 +23,25 @@ class _ModuleScreenState extends State<ModuleScreen> {
   TextEditingController _editModuleController = TextEditingController();
   TextEditingController _editWeightController = TextEditingController();
 
-  // void _addModule(String module, double weight) {
-  //   setState(() {
-  //     modules.add(module);
-  //     moduleWeights[module] = weight;
-  //   });
-  //   _addModuleController.clear();
-  //   _addWeightController.clear();
-  // }
+  void _addModule(String module, int credit) {
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    final newModule = Module(
+        id: '',
+        name: module,
+        credit: credit,
+        assessments: []); // create a new Year object with the provided data
+    gradeHubProvider.addModuleForYear(widget.year, newModule);
 
-  // void _removeModule(String module) {
-  //   setState(() {
-  //     modules.remove(module);
-  //     moduleWeights.remove(module);
-  //   });
-  // }
+    _addModuleController.clear();
+    _addWeightController.clear();
+  }
+
+  void _removeModule(String yearName, String moduleName) {
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    gradeHubProvider.removeModule(yearName, moduleName);
+  }
 
   // void _editModule(String module) {
   //   // Set the initial values for the text fields
@@ -169,8 +173,8 @@ class _ModuleScreenState extends State<ModuleScreen> {
                           SizedBox(width: 16.0),
                           ElevatedButton(
                             onPressed: () {
-                              // _addModule(_addModuleController.text,
-                              //     double.parse(_addWeightController.text));
+                              _addModule(_addModuleController.text,
+                                  int.parse(_addWeightController.text));
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
@@ -182,8 +186,10 @@ class _ModuleScreenState extends State<ModuleScreen> {
                       ),
                     ),
                     SizedBox(height: 16.0),
-                    ...modules.map(
-                      (module) => Container(
+                    ...modules.map((module) {
+                      double moduleAverage = gradeHubProvider
+                          .calculateModuleAverage(widget.year, module.name);
+                      return Container(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         child: Column(
                           children: [
@@ -225,7 +231,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                             ),
                                           ),
                                           Text(
-                                            '0',
+                                            moduleAverage.toString(),
                                             style: TextStyle(
                                               fontSize: 20.0,
                                               color: Colors.white,
@@ -258,7 +264,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                   SizedBox(width: 8.0),
                                   ElevatedButton.icon(
                                     onPressed: () {
-                                      //_removeModule(module);
+                                      _removeModule(widget.year, module.name);
                                     },
                                     icon: Icon(Icons.remove_circle, size: 18),
                                     label: Text('Remove'),
@@ -273,8 +279,8 @@ class _ModuleScreenState extends State<ModuleScreen> {
                             ),
                           ],
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                     ElevatedButton(
                       onPressed: () {
                         // Call the save function here

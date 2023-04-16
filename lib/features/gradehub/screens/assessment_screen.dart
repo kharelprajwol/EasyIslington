@@ -27,25 +27,31 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   TextEditingController _editWeightController = TextEditingController();
   TextEditingController _editMarkController = TextEditingController();
 
-  // void _addAssessment(
-  //     String assessmentName, int assessmentMark, double assessmentWeight) {
-  //   setState(() {
-  //     assessments.add(assessmentName);
-  //     enteredMarks[assessmentName] = assessmentMark;
-  //     enteredWeights[assessmentName] = assessmentWeight;
-  //   });
-  //   _addAssessmentController.clear();
-  //   _addMarkController.clear();
-  //   _addWeightController.clear();
-  // }
+  void _addAssessment(
+      String assessmentName, int assessmentMark, int assessmentWeight) {
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    final newAssessment = Assessment(
+        id: '',
+        name: assessmentName,
+        weight: assessmentWeight,
+        mark:
+            assessmentMark); // create a new Year object with the provided data
+    gradeHubProvider.addAssessmentForModule(
+        widget.year, widget.module, newAssessment);
 
-  // void _removeAssessment(String assessment) {
-  //   setState(() {
-  //     assessments.remove(assessment);
-  //     enteredMarks.remove(assessment);
-  //     enteredWeights.remove(assessment);
-  //   });
-  // }
+    _addAssessmentController.clear();
+    _addMarkController.clear();
+    _addWeightController.clear();
+  }
+
+  void _removeAssessment(
+      String year, String moduleName, String assessmentName) {
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    gradeHubProvider.removeAssessmentForModuleAndYear(
+        year, moduleName, assessmentName);
+  }
 
   // void _editAssessment(String assessment) {
   //   // Set the initial values for the text fields
@@ -202,10 +208,10 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                     SizedBox(width: 16.0),
                     ElevatedButton(
                       onPressed: () {
-                        // _addAssessment(
-                        //     _addAssessmentController.text,
-                        //     int.parse(_addMarkController.text),
-                        //     double.parse(_addWeightController.text));
+                        _addAssessment(
+                            _addAssessmentController.text,
+                            int.parse(_addMarkController.text),
+                            int.parse(_addWeightController.text));
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
@@ -284,7 +290,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                                 SizedBox(width: 8.0),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    // _removeAssessment(assessment);
+                                    _removeAssessment(widget.year,
+                                        widget.module, assessment.name);
                                   },
                                   icon: Icon(Icons.remove_circle, size: 18),
                                   label: Text('Remove'),

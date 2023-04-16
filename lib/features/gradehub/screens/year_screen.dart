@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../providers/gradehub_provider.dart';
 import '../../auth/screens/home_screen.dart';
+import '../models/year.dart';
 import 'module_screen.dart';
 
 class YearScreen extends StatefulWidget {
@@ -19,20 +20,23 @@ class _YearScreenState extends State<YearScreen> {
   TextEditingController _editYearController = TextEditingController();
   TextEditingController _editWeightController = TextEditingController();
 
-  void _addYear(String year, double weight) {
-    setState(() {
-      years.add(year);
-      yearWeights[year] = weight;
-    });
+  void _addYear(String year, int weight) {
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    final newYear = Year(
+        id: '',
+        year: year,
+        weight: weight,
+        modules: []); // create a new Year object with the provided data
+    gradeHubProvider.addYear(newYear);
     _addYearController.clear();
     _addWeightController.clear();
   }
 
   void _removeYear(String year) {
-    setState(() {
-      years.remove(year);
-      yearWeights.remove(year);
-    });
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    gradeHubProvider.removeYear(year);
   }
 
   void _editYear(String year) {
@@ -112,67 +116,62 @@ class _YearScreenState extends State<YearScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Consumer<GradeHubProvider>(
-                      builder: (context, gradeHubProvider, _) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: TextField(
-                                controller: _addYearController,
-                                decoration: InputDecoration(
-                                  hintText: 'Add year',
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Consumer<GradeHubProvider>(
+                    builder: (context, gradeHubProvider, _) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: TextField(
+                              controller: _addYearController,
+                              decoration: InputDecoration(
+                                hintText: 'Add year',
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 16.0),
-                            Expanded(
-                              child: TextField(
-                                controller: _addWeightController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  hintText: 'Weight %',
-                                  border: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
+                          ),
+                          SizedBox(width: 16.0),
+                          Expanded(
+                            child: TextField(
+                              controller: _addWeightController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                hintText: 'Weight %',
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 16.0),
-                            ElevatedButton(
-                              onPressed: () {
-                                _addYear(_addYearController.text,
-                                    double.parse(_addWeightController.text));
-                              },
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.green.shade900),
-                              ),
-                              child: Text('Add'),
+                          ),
+                          SizedBox(width: 16.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              _addYear(_addYearController.text,
+                                  int.parse(_addWeightController.text));
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green.shade900),
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 16.0),
-                        ...gradeHubProvider.years.map(
-                          (year) => Container(
+                            child: Text('Add'),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16.0),
+                      ...gradeHubProvider.years.map(
+                        (year) {
+                          double yearAverage =
+                              gradeHubProvider.calculateYearAverage(year.year);
+                          return Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             child: Column(
                               children: [
@@ -211,7 +210,7 @@ class _YearScreenState extends State<YearScreen> {
                                                 ),
                                               ),
                                               Text(
-                                                '0',
+                                                yearAverage.toString(),
                                                 //'${yearWeights[year]}%', // Display weight here
                                                 style: TextStyle(
                                                   fontSize: 20.0,
@@ -264,7 +263,7 @@ class _YearScreenState extends State<YearScreen> {
                                       SizedBox(width: 8.0),
                                       ElevatedButton.icon(
                                         onPressed: () {
-                                          // _removeYear(year);
+                                          _removeYear(year.year);
                                         },
                                         icon:
                                             Icon(Icons.remove_circle, size: 18),
@@ -280,23 +279,23 @@ class _YearScreenState extends State<YearScreen> {
                                 ),
                               ],
                             ),
-                          ),
+                          );
+                        },
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Call the save function here
+                          //saveData();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green.shade900),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Call the save function here
-                            //saveData();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.green.shade900),
-                          ),
-                          child: Text('Save'),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
+                        child: Text('Save'),
+                      ),
+                    ],
+                  );
+                }),
               ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 16.0),
@@ -308,7 +307,7 @@ class _YearScreenState extends State<YearScreen> {
                   ),
                 ),
                 child: Text(
-                  'Analysis will be shown here',
+                  'Analysis:',
                   style: TextStyle(
                     fontSize: 15.0,
                     //fontWeight: FontWeight.bold,
