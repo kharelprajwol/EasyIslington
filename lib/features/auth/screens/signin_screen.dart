@@ -20,7 +20,7 @@ class _SigninScreenState extends State<SigninScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override

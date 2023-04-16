@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_islington/constants/error_handling.dart';
 import 'package:easy_islington/providers/student_provider.dart';
 import 'package:easy_islington/constants/utils.dart';
+import '../../../providers/gradehub_provider.dart';
 import '../../assesment_schedule/services/get_assesment_schedule.dart';
 import '../../timetable/services/schedule_service.dart';
 import '../models/student.dart';
@@ -33,7 +34,7 @@ void signinStudent({
 
     // Make the HTTP POST request to the server and wait for the response
     http.Response res = await http.post(
-      Uri.parse('http://192.168.0.104:3000/api/signin'),
+      Uri.parse('http://192.168.0.100:3000/api/signin'),
       body: jsonEncode({"email": email, "password": password}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -49,9 +50,18 @@ void signinStudent({
         Provider.of<StudentProvider>(context, listen: false)
             .setStudent(res.body);
 
+        // Get the student ID from the provider
+        //String studentId =
+        //Provider.of<StudentProvider>(context, listen: false).student.id;
+
         // Get the schedule data and navigate to the dashboard
-        await getSchedule(context);
-        await getAssessmentData(context);
+        // await getSchedule(context);
+        // await getAssessmentData(context);
+
+        // Fetch and set years data
+        await Provider.of<GradeHubProvider>(context, listen: false)
+            .fetchAndSetYears("12345");
+
         Navigator.of(context).pop();
         Navigator.pushNamedAndRemoveUntil(
             context, DashboardScreen.routeName, (route) => false);

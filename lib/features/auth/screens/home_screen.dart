@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../../../providers/class_schedule_provider.dart';
 import '../../../providers/student_provider.dart';
 import '../../assesment_schedule/screens/assesment_schedule_screen.dart';
+
+import '../../gradehub/screens/year_screen.dart';
 import '../../timetable/models/schedule.dart';
 import '../../timetable/screens/schedule_screen.dart';
 import '../../timetable/widgets/schedule_tile.dart';
@@ -155,6 +157,10 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   onTap: () {
                     // Handle GradeHub button press
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => YearScreen()),
+                    );
                   },
                 ),
                 ListTile(

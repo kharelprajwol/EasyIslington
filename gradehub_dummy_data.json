@@ -1,0 +1,82 @@
+[{
+    "studentId": "12345",
+    "years": [
+      {
+        "year": "Year 1",
+        "weight": 1.0,
+        "modules": [
+          {
+            "name": "Mathematics",
+            "credit": 4,
+            "assessments": [
+              {
+                "name": "Midterm Exam",
+                "weight": 40,
+                "mark": 35
+              },
+              {
+                "name": "Final Exam",
+                "weight": 60,
+                "mark": 50
+              }
+            ]
+          },
+          {
+            "name": "Physics",
+            "credit": 4,
+            "assessments": [
+              {
+                "name": "Midterm Exam",
+                "weight": 40,
+                "mark": 30
+              },
+              {
+                "name": "Final Exam",
+                "weight": 60,
+                "mark": 45
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "year": "Year 2",
+        "weight": 1.0,
+        "modules": [
+          {
+            "name": "Chemistry",
+            "credit": 4,
+            "assessments": [
+              {
+                "name": "Midterm Exam",
+                "weight": 40,
+                "mark": 32
+              },
+              {
+                "name": "Final Exam",
+                "weight": 60,
+                "mark": 48
+              }
+            ]
+          },
+          {
+            "name": "Biology",
+            "credit": 4,
+            "assessments": [
+              {
+                "name": "Midterm Exam",
+                "weight": 40,
+                "mark": 38
+              },
+              {
+                "name": "Final Exam",
+                "weight": 60,
+                "mark": 52
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }]
+  

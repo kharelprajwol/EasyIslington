@@ -14,6 +14,7 @@ import 'features/grade_calculator/screens/calculator_screen.dart';
 
 import 'features/timetable/screens/schedule_screen.dart';
 import 'features/timetable/widgets/schedule_tile.dart';
+import 'providers/gradehub_provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -26,6 +27,7 @@ void main() {
     ChangeNotifierProvider(
       create: (context) => AssessmentScheduleProvider(),
     ),
+    ChangeNotifierProvider(create: (context) => GradeHubProvider()),
   ], child: const MyApp()));
 }
 
@@ -42,10 +44,10 @@ class MyApp extends StatelessWidget {
       ),
       //
       onGenerateRoute: (settings) => generateRoutes(settings),
-      //home: SigninScreen(),
+      home: SigninScreen(),
       //home: DashboardScreen(),
       //home: GradeCalculatorPage(),
-      home: YearScreen(),
+      //home: YearScreen(),
     );
   }
 }
