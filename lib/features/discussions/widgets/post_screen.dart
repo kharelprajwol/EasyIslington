@@ -1,30 +1,82 @@
 import 'package:flutter/material.dart';
-
+import 'package:easy_islington/features/discussions/models/comment.dart';
+import '../discussions_service.dart';
 import 'comment_card.dart';
 
 class PostScreen extends StatefulWidget {
+  final String title;
+  final String author;
+  final String date;
+  final String content;
+  final List<Comment> comments; // List of comments
+  final String postId; // Post ID
+
+  PostScreen({
+    required this.title,
+    required this.author,
+    required this.date,
+    required this.content,
+    required this.postId,
+    required this.comments,
+  });
+
   @override
   _PostScreenState createState() => _PostScreenState();
 }
 
 class _PostScreenState extends State<PostScreen> {
-  List<String> comments = [
-    'Thanks for sharing this post!',
-    'I had a similar issue. Did you try restarting the server?',
-    'Great post! Very helpful information.',
-    'Comment 1',
-    'Comment 2',
-    'Comment 3',
-    'Comment 4',
-    'Comment 5',
-    'Comment 6',
-    'Comment 7',
-  ];
+  final DiscussionsService discussionsService = DiscussionsService();
+  final _comments = <Comment>[];
+  final _scrollController = ScrollController();
 
-  void addComment(String comment) {
-    setState(() {
-      comments.add(comment);
-    });
+  @override
+  void initState() {
+    super.initState();
+    _comments.addAll(widget.comments);
+  }
+
+  Future<void> addComment(String text) async {
+    try {
+      await discussionsService.addComment(
+        postId: widget.postId,
+        text: text,
+        author: widget.author,
+      );
+
+      final newComment = Comment(
+        author: widget.author,
+        text: text,
+        createdAt: DateTime.now(),
+        // If there are other fields in the Comment model, provide them with appropriate values.
+      );
+
+      setState(() {
+        _comments.add(newComment);
+      });
+
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Comment added successfully!')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error adding comment: $error')),
+      );
+    }
+  }
+
+  TextEditingController _commentController = TextEditingController();
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,16 +92,16 @@ class _PostScreenState extends State<PostScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Title: MSQL not working',
+              widget.title,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 12),
             Text(
-              'Author: Prajwol Kharel',
+              'Author: ${widget.author}',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -57,13 +109,13 @@ class _PostScreenState extends State<PostScreen> {
             ),
             SizedBox(height: 10),
             Text(
-              'Date: 2022-02-25',
+              'Date: ${widget.date}',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 25),
             Text(
               'Content:',
               style: TextStyle(
@@ -74,13 +126,14 @@ class _PostScreenState extends State<PostScreen> {
             ),
             SizedBox(height: 10),
             Text(
-              'I\'m having trouble with MSQL database connections. Whenever I try to connect...',
+              widget.content,
               style: TextStyle(
                 fontSize: 18,
               ),
             ),
             SizedBox(height: 20),
             Divider(color: Colors.black),
+            SizedBox(height: 20),
             Text(
               'Comments:',
               style: TextStyle(
@@ -92,70 +145,48 @@ class _PostScreenState extends State<PostScreen> {
             SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemCount: comments.length,
+                controller: _scrollController,
+                itemCount: _comments.length,
                 itemBuilder: (context, index) {
+                  final comment = _comments[index];
                   return CommentCard(
-                    commenterName:
-                        'John Doe', // Replace with actual commenter name
-                    comment: comments[index],
+                    commenterName: comment.author,
+                    comment: comment.text,
                   );
                 },
               ),
             ),
             SizedBox(height: 20),
-            CommentForm(onCommentAdded: addComment),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _commentController,
+                    decoration: InputDecoration(
+                      labelText: 'Add a comment...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_commentController.text.isNotEmpty) {
+                      await addComment(_commentController.text);
+                      _commentController.clear();
+                      FocusScope.of(context).unfocus();
+                    }
+                  },
+                  child: Text('Add'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
-  }
-}
-
-class CommentForm extends StatefulWidget {
-  final Function(String) onCommentAdded;
-
-  CommentForm({required this.onCommentAdded});
-
-  @override
-  _CommentFormState createState() => _CommentFormState();
-}
-
-class _CommentFormState extends State<CommentForm> {
-  TextEditingController _commentController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _commentController,
-            decoration: InputDecoration(
-              labelText: 'Add a comment...',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        SizedBox(width: 10),
-        ElevatedButton(
-          onPressed: () {
-            if (_commentController.text.isNotEmpty) {
-              widget.onCommentAdded(_commentController.text);
-              _commentController.clear();
-            }
-          },
-          child: Text('Add'),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _commentController.dispose();
-    super.dispose();
   }
 }

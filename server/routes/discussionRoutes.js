@@ -1,8 +1,19 @@
 const express = require('express');
-const getDiscussions = require('../controllers/discussionController');
+const {
+  createPost,
+  addComment,
+  getPosts
+} = require('../controllers/discussionController');
 
 const discussionRouter = express.Router();
 
-discussionRouter.post('/discussions',getDiscussions)
+// Create a new post
+discussionRouter.post('/create-post', createPost);
+
+// Add a comment to a post
+discussionRouter.post('/add-comment', addComment);
+
+// Get all posts with details and comments for a specific specialization
+discussionRouter.get('/get-posts/:specialization', getPosts);
 
 module.exports = discussionRouter;

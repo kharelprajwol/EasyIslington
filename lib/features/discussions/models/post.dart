@@ -1,53 +1,35 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'comment.dart';
 
 class Post {
   final String id;
   final String title;
-  final String body;
+  final String content;
   final String author;
-  final String date;
+  final DateTime createdAt;
   final List<Comment> comments;
 
   Post({
     required this.id,
     required this.title,
-    required this.body,
+    required this.content,
     required this.author,
-    required this.date,
+    required this.createdAt,
     required this.comments,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'title': title,
-      'body': body,
-      'author': author,
-      'date': date,
-      'comments': comments.map((x) => x.toMap()).toList(),
-    };
-  }
+  factory Post.fromJson(Map<String, dynamic> json) {
+    final commentsList = json['comments'] as List;
+    final comments = commentsList.map((commentJson) {
+      return Comment.fromJson(commentJson);
+    }).toList();
 
-  factory Post.fromMap(Map<String, dynamic> map) {
     return Post(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      body: map['body'] as String,
-      author: map['author'] as String,
-      date: map['date'] as String,
-      comments: List<Comment>.from(
-        (map['comments'] as List<int>).map<Comment>(
-          (x) => Comment.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      id: json['_id'],
+      title: json['title'],
+      content: json['content'],
+      author: json['author'],
+      createdAt: DateTime.parse(json['createdAt']),
+      comments: comments,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Post.fromJson(String source) =>
-      Post.fromMap(json.decode(source) as Map<String, dynamic>);
 }

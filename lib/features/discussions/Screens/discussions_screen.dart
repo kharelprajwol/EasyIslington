@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../discussions_service.dart';
 import '../widgets/create_post_screen.dart';
+import '../widgets/post_list.dart';
+import '../widgets/post_list_item.dart';
 import '../widgets/post_screen.dart';
+import '../models/post.dart'; // Import the Post model
+import '../discussions_service.dart'; // Import the DiscussionsService
 
-class ForumScreen extends StatelessWidget {
+class ForumScreen extends StatefulWidget {
+  @override
+  _ForumScreenState createState() => _ForumScreenState();
+}
+
+class _ForumScreenState extends State<ForumScreen> {
+  final DiscussionsService discussionsService = DiscussionsService();
+  List<Post> posts = []; // List to store fetched posts
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPosts();
+  }
+
+  Future<void> fetchPosts() async {
+    try {
+      final List<Post> fetchedPosts =
+          await discussionsService.fetchPosts('Computer');
+      setState(() {
+        posts = fetchedPosts;
+      });
+    } catch (error) {
+      print('Error fetching posts: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +56,32 @@ class ForumScreen extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: posts.length,
                 itemBuilder: (context, index) {
-                  return _buildPostCard(context, index);
+                  final post = posts[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostScreen(
+                            title: post.title,
+                            author: post.author,
+                            date:
+                                DateFormat('yyyy-MM-dd').format(post.createdAt),
+                            content: post.content,
+                            comments: post.comments, // Pass the comments list
+                            postId: post.id, // Pass the post ID
+                          ),
+                        ),
+                      );
+                    },
+                    child: PostListItem(
+                      title: post.title,
+                      author: post.author,
+                      date: DateFormat('yyyy-MM-dd').format(post.createdAt),
+                    ),
+                  );
                 },
               ),
             ),
@@ -44,64 +99,6 @@ class ForumScreen extends StatelessWidget {
         },
         backgroundColor: Colors.blue,
         child: Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
-
-  Widget _buildPostCard(BuildContext context, int index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ListTile(
-        title: Text(
-          'MSQL not working',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 8.0),
-            Text(
-              'Author: Prajwol Kharel',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 4.0),
-            Text(
-              'Date: 2022-02-25',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PostScreen(),
-            ),
-          );
-        },
       ),
     );
   }

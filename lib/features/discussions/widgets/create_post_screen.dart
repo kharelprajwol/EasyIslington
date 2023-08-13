@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../Screens/discussions_screen.dart';
+import '../discussions_service.dart';
+
 class CreatePostScreen extends StatefulWidget {
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
@@ -8,6 +11,20 @@ class CreatePostScreen extends StatefulWidget {
 class _CreatePostScreenState extends State<CreatePostScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
+  final DiscussionsService discussionsService = DiscussionsService();
+
+  Future<void> createPost(String title, String content) async {
+    try {
+      await discussionsService.createPost(
+        specialization: 'Computer',
+        title: title,
+        content: content,
+        author: 'prajwol',
+      );
+    } catch (error) {
+      print('Error adding comment: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +81,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
-                // TODO: Add functionality to submit the post
+              onPressed: () async {
+                final title = _titleController.text;
+                final content = _contentController.text;
+                if (title.isNotEmpty && content.isNotEmpty) {
+                  await createPost(title, content);
+
+                  // Navigate to ForumScreen
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ForumScreen()),
+                  );
+                } else {
+                  // Show an error or validation message if title or content is empty
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('Please enter both title and content.')),
+                  );
+                }
               },
               child: Text(
                 'Submit Post',

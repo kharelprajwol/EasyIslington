@@ -1,3 +1,4 @@
+import 'package:easy_islington/providers/discussions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
@@ -16,9 +17,9 @@ import 'features/timetable/widgets/schedule_tile.dart';
 import 'providers/gradehub_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Needed for async operations before runApp
-  await FlutterConfig.loadEnvVariables(); // Load environment variables
+  // WidgetsFlutterBinding
+  //     .ensureInitialized(); // Needed for async operations before runApp
+  // await FlutterConfig.loadEnvVariables(); // Load environment variables
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
@@ -31,6 +32,7 @@ void main() async {
       create: (context) => AssessmentScheduleProvider(),
     ),
     ChangeNotifierProvider(create: (context) => GradeHubProvider()),
+    ChangeNotifierProvider(create: (context) => DiscussionsProvider()),
   ], child: const MyApp()));
 }
 

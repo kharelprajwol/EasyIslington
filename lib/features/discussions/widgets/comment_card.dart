@@ -11,18 +11,41 @@ class CommentCard extends StatelessWidget {
     return Card(
       elevation: 3,
       margin: EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Column(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              commenterName,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+            CircleAvatar(
+              child: Text(commenterName[0]
+                  .toUpperCase()), // Using the first letter of the commenter's name
+              backgroundColor: Colors.blue.shade900,
+              //foregroundColor: Colors.grey[800],
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    commenterName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    comment,
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 4),
-            Text(comment),
           ],
         ),
       ),

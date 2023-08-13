@@ -1,54 +1,24 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  body: {
-    type: String,
-    required: true
-  },
-  author: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: String,
-    required: true
-  }
+  text: String,
+  author: String,
+  createdAt: { type: Date, default: Date.now }
 });
 
 const postSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  body: {
-    type: String,
-    required: true
-  },
-  author: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: String,
-    required: true
-  },
-  comments: {
-   type: [commentSchema],
-   required: true
-  }
+  title: String,
+  content: String,
+  author: String,
+  createdAt: { type: Date, default: Date.now },
+  comments: [commentSchema] // Embed comments directly within the post
 });
 
 const discussionSchema = new mongoose.Schema({
-  specialization: {
-    type: String,
-    required: true
-  },
-  posts: {
-    type: [postSchema],
-    required: true
-  }
+  specialization: String,
+  posts: [postSchema] // Embed posts directly within the specialization
 });
 
-const discussion = mongoose.model('discussions', discussionSchema);
+const Discussion = mongoose.model('discussions', discussionSchema);
 
-module.exports = discussion;
+module.exports = Discussion;

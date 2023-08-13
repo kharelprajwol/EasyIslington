@@ -1,39 +1,19 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 class Comment {
-  final String id;
-  final String body;
+  final String text;
   final String author;
-  final String date;
+  final DateTime createdAt;
 
   Comment({
-    required this.id,
-    required this.body,
+    required this.text,
     required this.author,
-    required this.date,
+    required this.createdAt,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'body': body,
-      'author': author,
-      'date': date,
-    };
-  }
-
-  factory Comment.fromMap(Map<String, dynamic> map) {
+  factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: map['id'] as String,
-      body: map['body'] as String,
-      author: map['author'] as String,
-      date: map['date'] as String,
+      text: json['text'],
+      author: json['author'],
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Comment.fromJson(String source) =>
-      Comment.fromMap(json.decode(source) as Map<String, dynamic>);
 }
