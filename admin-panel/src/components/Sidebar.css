@@ -1,0 +1,56 @@
+/* src/styles/Sidebar.css */
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed; /* This ensures the sidebar remains in place */
+    top: 0; /* Aligns the sidebar to the top */
+    left: 0; /* Aligns the sidebar to the left */
+    background-color: #1A237E; /* Deep Blue */
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    color: #FFCDD2; /* Soft Red */
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid #3949AB; /* Mid-tone Blue */
+    transition: background-color 0.3s;
+}
+
+.sidebar ul li:last-child {
+    border-bottom: none;
+}
+
+.sidebar ul li a {
+    color: #FFCDD2; /* Soft Red */
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li:hover {
+    background-color: #3949AB; /* Mid-tone Blue */
+}
+
+.sidebar ul li a:hover {
+    color: #E57373; /* Brighter Red */
+}
+
+.sidebar ul li a.active {
+    color: #E53935; /* Bright Red */
+}
