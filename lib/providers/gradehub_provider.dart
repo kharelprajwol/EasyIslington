@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../features/gradehub/models/assessment.dart';
 import '../features/gradehub/models/module.dart';
 import '../features/gradehub/models/year.dart';
-import '../features/gradehub/services/gradehub_service.dart';
+import '../features/gradehub/gradehub_service.dart';
 
 class GradeHubProvider with ChangeNotifier {
   List<Year> _years = [];
@@ -117,5 +116,26 @@ class GradeHubProvider with ChangeNotifier {
 
     double moduleAverage = totalWeight > 0 ? weightedSum / totalWeight : 0.0;
     return moduleAverage;
+  }
+
+  void editModuleForYear(String yearName, String originalModuleName,
+      String updatedModuleName, int updatedCredit) {
+    final yearIndex = _years.indexWhere((year) => year.year == yearName);
+
+    if (yearIndex != -1) {
+      // Find the module within the year using the module name
+      final moduleIndex = _years[yearIndex]
+          .modules
+          .indexWhere((module) => module.name == originalModuleName);
+
+      if (moduleIndex != -1) {
+        Module existingModule = _years[yearIndex].modules[moduleIndex];
+        // Update the module details
+        existingModule.name = updatedModuleName;
+        existingModule.credit = updatedCredit;
+
+        notifyListeners(); // Notify listeners of the change
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/year.dart';
+import 'models/year.dart';
 
 class GradehubService {
   //final String _baseUrl = 'http://192.168.0.104:3000/api/schedule';

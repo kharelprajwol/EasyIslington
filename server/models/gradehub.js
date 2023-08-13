@@ -39,7 +39,7 @@ const YearSchema = new mongoose.Schema({
   modules: [ModuleSchema],
 });
 
-const StudentMarksSchema = new mongoose.Schema({
+const GradeSchema = new mongoose.Schema({
   studentId: {
     type: String,
     required: true,
@@ -48,8 +48,7 @@ const StudentMarksSchema = new mongoose.Schema({
   years: [YearSchema],
 });
 
-const StudentMarks = mongoose.model('student_marks', StudentMarksSchema);
+const Grade = mongoose.model('grades', GradeSchema);
 
-module.exports = {
-  StudentMarks,
-};
+module.exports = Grade;
+

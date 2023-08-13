@@ -23,14 +23,15 @@ class _ModuleScreenState extends State<ModuleScreen> {
   TextEditingController _editModuleController = TextEditingController();
   TextEditingController _editWeightController = TextEditingController();
 
+  bool isValidCredit(int credit) {
+    return credit == 15 || credit == 30 || credit == 60;
+  }
+
   void _addModule(String module, int credit) {
     final gradeHubProvider =
         Provider.of<GradeHubProvider>(context, listen: false);
-    final newModule = Module(
-        id: '',
-        name: module,
-        credit: credit,
-        assessments: []); // create a new Year object with the provided data
+    final newModule =
+        Module(id: '', name: module, credit: credit, assessments: []);
     gradeHubProvider.addModuleForYear(widget.year, newModule);
 
     _addModuleController.clear();
@@ -43,60 +44,16 @@ class _ModuleScreenState extends State<ModuleScreen> {
     gradeHubProvider.removeModule(yearName, moduleName);
   }
 
-  // void _editModule(String module) {
-  //   // Set the initial values for the text fields
-  //   _editModuleController.text = module;
-  //   _editWeightController.text = moduleWeights[module].toString();
+  void _editModule(
+      String originalModuleName, String updatedModuleName, int updatedCredit) {
+    final gradeHubProvider =
+        Provider.of<GradeHubProvider>(context, listen: false);
+    gradeHubProvider.editModuleForYear(
+        widget.year, originalModuleName, updatedModuleName, updatedCredit);
 
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Edit Module'),
-  //           content: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               TextField(
-  //                 controller: _editModuleController,
-  //                 decoration: InputDecoration(
-  //                   hintText: 'Module',
-  //                 ),
-  //               ),
-  //               SizedBox(height: 16.0),
-  //               TextField(
-  //                 controller: _editWeightController,
-  //                 keyboardType: TextInputType.number,
-  //                 decoration: InputDecoration(
-  //                   hintText: 'Credit',
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               child: Text('Cancel'),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //             TextButton(
-  //               child: Text('Save'),
-  //               onPressed: () {
-  //                 // Update the module and weight
-  //                 String newModule = _editModuleController.text;
-  //                 double newWeight = double.parse(_editWeightController.text);
-  //                 setState(() {
-  //                   modules.remove(module);
-  //                   modules.add(newModule);
-  //                   moduleWeights[newModule] = newWeight;
-  //                 });
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
+    _editModuleController.clear();
+    _editWeightController.clear();
+  }
 
   @override
   void initState() {
@@ -108,12 +65,67 @@ class _ModuleScreenState extends State<ModuleScreen> {
           gradeHubProvider.years.firstWhere((year) => year.year == widget.year);
 
       if (yearData != null) {
-        // Assuming the yearData has a list of modules with their names and weights
         setState(() {
           modules = yearData.modules;
         });
       }
     });
+  }
+
+  Future<void> _showEditDialog(Module module) async {
+    _editModuleController.text = module.name;
+    _editWeightController.text = module.credit.toString();
+
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Edit Module'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _buildTextField(
+              controller: _editModuleController,
+              hintText: 'Module',
+              borderColor: Colors.blue,
+            ),
+            SizedBox(height: 16.0),
+            _buildTextField(
+              controller: _editWeightController,
+              hintText: 'Credit',
+              borderColor: Colors.blue,
+              isNumber: true,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Update'),
+            onPressed: () {
+              int parsedCredit = int.parse(_editWeightController.text);
+              if (isValidCredit(parsedCredit)) {
+                _editModule(
+                    module.name, _editModuleController.text, parsedCredit);
+                Navigator.of(ctx).pop();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text('Invalid credit! Please enter 15, 30, or 60.'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -122,182 +134,151 @@ class _ModuleScreenState extends State<ModuleScreen> {
       appBar: AppBar(
         title: Text('Modules for ${widget.year}'),
         backgroundColor: Colors.red.shade900,
+        centerTitle: true,
       ),
       backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-                width: 2.0,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Consumer<GradeHubProvider>(
-                  builder: (context, gradeHubProvider, _) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _addModuleController,
-                              decoration: InputDecoration(
-                                hintText: 'Module',
-                                border: OutlineInputBorder(),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16.0),
-                          Expanded(
-                            child: TextField(
-                              controller: _addWeightController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                hintText: 'Credit',
-                                border: OutlineInputBorder(),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              _addModule(_addModuleController.text,
-                                  int.parse(_addWeightController.text));
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green.shade900),
-                            ),
-                            child: Text('Add'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    ...modules.map((module) {
-                      double moduleAverage = gradeHubProvider
-                          .calculateModuleAverage(widget.year, module.name);
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // Handle button press for this module
-                                      // For example, navigate to another screen
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AssessmentScreen(
-                                                  year: widget.year,
-                                                  module: module.name),
-                                        ),
-                                      );
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.blue.shade900),
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${module.name} (${module.credit})',
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            moduleAverage.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      //_editModule(module);
-                                    },
-                                    icon: Icon(Icons.edit, size: 18),
-                                    label: Text('Edit'),
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.orange.shade700),
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.0),
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      _removeModule(widget.year, module.name);
-                                    },
-                                    icon: Icon(Icons.remove_circle, size: 18),
-                                    label: Text('Remove'),
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.red.shade700),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+          child: Consumer<GradeHubProvider>(
+            builder: (context, gradeHubProvider, _) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Add Module Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildTextField(
+                          controller: _addModuleController,
+                          hintText: 'Module',
+                          borderColor: Colors.blue,
                         ),
-                      );
-                    }),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Call the save function here
-                        //saveData();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.green.shade900),
                       ),
-                      child: Text('Save'),
-                    ),
-                  ],
-                );
-              }),
-            ),
+                      SizedBox(width: 8.0),
+                      Expanded(
+                        child: _buildTextField(
+                          controller: _addWeightController,
+                          hintText: 'Credit',
+                          borderColor: Colors.blue,
+                          isNumber: true,
+                        ),
+                      ),
+                      SizedBox(width: 8.0),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          int parsedCredit =
+                              int.parse(_addWeightController.text);
+                          if (isValidCredit(parsedCredit)) {
+                            _addModule(_addModuleController.text, parsedCredit);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Invalid credit! Please enter 15, 30, or 60.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.blue.shade900),
+                        ),
+                        icon: Icon(Icons.add, color: Colors.white),
+                        label:
+                            Text('Add', style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.0),
+                  // Modules List
+                  ...modules.map((module) {
+                    double moduleAverage = gradeHubProvider
+                        .calculateModuleAverage(widget.year, module.name);
+                    return _buildModuleCard(
+                        module, moduleAverage, gradeHubProvider);
+                  }),
+                ],
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required Color borderColor,
+    bool isNumber = false,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: borderColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: borderColor),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModuleCard(
+      Module module, double moduleAverage, GradeHubProvider gradeHubProvider) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      color: Colors.white,
+      elevation: 5.0,
+      child: Column(
+        children: [
+          ListTile(
+            title: Text('${module.name} (${module.credit})',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+            trailing: Text(moduleAverage.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AssessmentScreen(year: widget.year, module: module.name),
+                ),
+              );
+            },
+          ),
+          ButtonBar(
+            alignment: MainAxisAlignment.start,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () => _showEditDialog(module),
+                icon: Icon(Icons.edit, size: 18, color: Colors.white),
+                label: Text('Edit', style: TextStyle(color: Colors.white)),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue.shade900),
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _removeModule(widget.year, module.name);
+                },
+                icon: Icon(Icons.remove_circle_outline,
+                    size: 18, color: Colors.white),
+                label: Text('Remove', style: TextStyle(color: Colors.white)),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.red.shade900),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

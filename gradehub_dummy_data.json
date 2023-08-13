@@ -1,82 +1,81 @@
 [{
-    "studentId": "12345",
-    "years": [
-      {
-        "year": "Year 1",
-        "weight": 1.0,
-        "modules": [
-          {
-            "name": "Mathematics",
-            "credit": 4,
-            "assessments": [
-              {
-                "name": "Midterm Exam",
-                "weight": 40,
-                "mark": 35
-              },
-              {
-                "name": "Final Exam",
-                "weight": 60,
-                "mark": 50
-              }
-            ]
-          },
-          {
-            "name": "Physics",
-            "credit": 4,
-            "assessments": [
-              {
-                "name": "Midterm Exam",
-                "weight": 40,
-                "mark": 30
-              },
-              {
-                "name": "Final Exam",
-                "weight": 60,
-                "mark": 45
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "year": "Year 2",
-        "weight": 1.0,
-        "modules": [
-          {
-            "name": "Chemistry",
-            "credit": 4,
-            "assessments": [
-              {
-                "name": "Midterm Exam",
-                "weight": 40,
-                "mark": 32
-              },
-              {
-                "name": "Final Exam",
-                "weight": 60,
-                "mark": 48
-              }
-            ]
-          },
-          {
-            "name": "Biology",
-            "credit": 4,
-            "assessments": [
-              {
-                "name": "Midterm Exam",
-                "weight": 40,
-                "mark": 38
-              },
-              {
-                "name": "Final Exam",
-                "weight": 60,
-                "mark": 52
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }]
-  
+  "studentId": "64d860cc8f34c53ef735d36f",
+  "years": [
+    {
+      "year": "2021",
+      "weight": 60,
+      "modules": [
+        {
+          "name": "Mathematics",
+          "credit": 10,
+          "assessments": [
+            {
+              "name": "Midterm Exam",
+              "weight": 50,
+              "mark": 45
+            },
+            {
+              "name": "Final Exam",
+              "weight": 50,
+              "mark": 48
+            }
+          ]
+        },
+        {
+          "name": "Physics",
+          "credit": 10,
+          "assessments": [
+            {
+              "name": "Lab Test",
+              "weight": 40,
+              "mark": 35
+            },
+            {
+              "name": "Theory Exam",
+              "weight": 60,
+              "mark": 55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2022",
+      "weight": 70,
+      "modules": [
+        {
+          "name": "Chemistry",
+          "credit": 10,
+          "assessments": [
+            {
+              "name": "Midterm Exam",
+              "weight": 50,
+              "mark": 46
+            },
+            {
+              "name": "Final Exam",
+              "weight": 50,
+              "mark": 44
+            }
+          ]
+        },
+        {
+          "name": "Biology",
+          "credit": 10,
+          "assessments": [
+            {
+              "name": "Lab Test",
+              "weight": 40,
+              "mark": 37
+            },
+            {
+              "name": "Theory Exam",
+              "weight": 60,
+              "mark": 54
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}]

@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'assessment.dart';
 
 class Module {
-  final String id;
-  final String name;
-  final int credit;
+  String id;
+  String name;
+  int credit;
   final List<Assessment> assessments;
 
   Module(

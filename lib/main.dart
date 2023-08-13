@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_islington/features/gradehub/screens/year_screen.dart';
-import 'package:easy_islington/providers/assessment_schedule_provider.dart';
 import 'package:easy_islington/providers/class_schedule_provider.dart';
 import 'package:easy_islington/providers/student_provider.dart';
 import 'package:easy_islington/router.dart';
@@ -27,9 +26,6 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => ClassScheduleProvider(),
-    ),
-    ChangeNotifierProvider(
-      create: (context) => AssessmentScheduleProvider(),
     ),
     ChangeNotifierProvider(create: (context) => GradeHubProvider()),
     ChangeNotifierProvider(create: (context) => DiscussionsProvider()),
