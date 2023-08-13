@@ -1,28 +1,57 @@
-import 'package:easy_islington/features/grade_calculator/screens/calculator_screen.dart';
+import 'package:easy_islington/features/discussions/Screens/discussions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 
-import '../../../providers/class_schedule_provider.dart';
 import '../../../providers/student_provider.dart';
-import '../../assesment_schedule/screens/assesment_schedule_screen.dart';
-
+//import '../../assesment_schedule/screens/assesment_schedule_screen.dart';
 import '../../gradehub/screens/year_screen.dart';
-import '../../timetable/models/schedule.dart';
 import '../../timetable/screens/schedule_screen.dart';
-import '../../timetable/widgets/schedule_tile.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String routeName = '/home';
 
+  // Function to load and show the PDF
+  Future<void> _displayPdf(BuildContext context) async {
+    try {
+      final document = await PDFDocument.fromAsset(
+          'assets/userManual.pdf'); // Load the PDF from assets
+
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text("User Manual"),
+            backgroundColor: Colors.red.shade900,
+          ),
+          body: PDFViewer(document: document),
+        ),
+      ));
+    } catch (e) {
+      print('Error loading PDF: $e'); // Print the error message
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('An error occurred while loading the PDF.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Get today's date
-    final today = DateFormat('EEEE').format(DateTime.now());
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     double fontSize = screenWidth > 400 ? 20 : 15;
 
     return Scaffold(
@@ -36,65 +65,46 @@ class DashboardScreen extends StatelessWidget {
             )),
         backgroundColor: Colors.red.shade900,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: screenHeight * 0.01,
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              color: Colors.blue.shade900, // set the background color here
-              child: Text('Today\'s Classes',
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.menu,
+                size: 80,
+                color: Colors.red.shade900,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Use the drawer to access features and functionalities.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontSize: fontSize + 2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
+              TextButton(
+                onPressed: () => _displayPdf(context), // Call the function here
+                child: Text(
+                  'For detailed instructions, click here.',
                   style: GoogleFonts.openSans(
                     textStyle: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Kalam',
                       fontSize: fontSize,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.blue,
                     ),
-                  )),
-            ),
-            Consumer<ClassScheduleProvider>(
-              builder: (context, classScheduleProvider, child) {
-                final schedules = classScheduleProvider.schedules
-                    .where((schedule) => schedule.day == today)
-                    .toList();
-                return schedules.isNotEmpty
-                    ? Flexible(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: schedules.length,
-                          itemBuilder: (context, index) {
-                            final schedule = schedules[index];
-                            return ScheduleTile(schedule: schedules[index]);
-                          },
-                        ),
-                      )
-                    : Text('No classes today');
-              },
-            ),
-            SizedBox(
-              height: screenHeight * 0.01,
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              color: Colors.blue.shade900, // set the background color here
-              child: Text('Upcoming Assessment',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Kalam',
-                      fontSize: fontSize,
-                    ),
-                  )),
-            ),
-          ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      //body: Center(child: Text("hello")),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -117,13 +127,12 @@ class DashboardScreen extends StatelessWidget {
                         student.email,
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      //SizedBox(height: 5),
                       TextButton(
                         onPressed: () {
                           // Handle the "Update your profile" button press
                         },
                         child: Text(
-                          'Update your profile',
+                          'Update profile',
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ),
@@ -132,10 +141,10 @@ class DashboardScreen extends StatelessWidget {
                 );
               },
             ),
-            ExpansionTile(
+            ListTile(
               leading: Icon(Icons.grade),
               title: Text(
-                'Grades',
+                'My Grades',
                 style: GoogleFonts.openSans(
                   textStyle: TextStyle(
                     fontFamily: 'Kalam',
@@ -143,107 +152,51 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              children: [
-                ListTile(
-                  //leading: Icon(Icons.star),
-                  title: Text(
-                    'GradeHub',
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                        fontFamily: 'Kalam',
-                        fontSize: fontSize - 5,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    // Handle GradeHub button press
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => YearScreen()),
-                    );
-                  },
-                ),
-                ListTile(
-                  //leading: Icon(Icons.calculate),
-                  title: Text(
-                    'Grade Calculator',
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                        fontFamily: 'Kalam',
-                        fontSize: fontSize - 5,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GradeCalculatorPage()),
-                    );
-                  },
-                ),
-              ],
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => YearScreen()),
+                );
+              },
             ),
-            ExpansionTile(
+            ListTile(
               leading: Icon(Icons.schedule),
-              title: Text('Schedule',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontFamily: 'Kalam',
-                      fontSize: fontSize,
-                    ),
-                  )),
-              children: [
-                ListTile(
-                  title: Text('Class Schedule',
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontFamily: 'Kalam',
-                          fontSize: fontSize - 5,
-                        ),
-                      )),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ClassScheduleScreen()),
-                    );
-                  },
+              title: Text(
+                'Class Schedule',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontFamily: 'Kalam',
+                    fontSize: fontSize,
+                  ),
                 ),
-                ListTile(
-                  title: Text('Assessment Schedule',
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontFamily: 'Kalam',
-                          fontSize: fontSize - 5,
-                        ),
-                      )),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AssessmentScreen()),
-                    );
-                  },
-                ),
-              ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ClassScheduleScreen()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.forum),
-              title: Text('Discussions'),
+              title: Text(
+                'Discussions',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontFamily: 'Kalam',
+                    fontSize: fontSize,
+                  ),
+                ),
+              ),
               onTap: () {
-                // Handle Forum button press
-                //showDiscussions(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForumScreen()),
+                );
               },
             ),
             Divider(),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings button press
-              },
-            ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),

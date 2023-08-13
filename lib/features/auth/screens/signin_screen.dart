@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../timetable/services/schedule_service.dart';
 import '../services/signin_service.dart';
 import 'home_screen.dart';
+import 'signup_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   @override
@@ -14,8 +13,10 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen>
     with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
-  late final _emailController = TextEditingController();
-  late final _passwordController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool _isObscure = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,20 +31,22 @@ class _SigninScreenState extends State<SigninScreen>
 
   @override
   void dispose() {
-    super.dispose();
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
+    super.dispose();
   }
 
   void authenticateStudent() {
+    setState(() {
+      _isLoading = true;
+    });
     signinStudent(
         context: context,
-        email: _emailController.text,
+        username: _usernameController.text,
         password: _passwordController.text);
-  }
-
-  void showSchedule(BuildContext context) {
-    getSchedule(context);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -56,133 +59,141 @@ class _SigninScreenState extends State<SigninScreen>
     double fontSize = screenWidth > 400 ? 15 : 12;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.all(textFieldPadding),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/logo.png',
-                    height: imageSize,
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  TextFormField(
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(
-                        fontFamily: 'Kalam',
-                        fontSize: fontSize,
-                      ),
-                    ),
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Email",
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter your email";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      if (value != null) {
-                        _emailController.text = value;
-                      }
-                    },
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Password",
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter your password";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      if (value != null) {
-                        _passwordController.text = value;
-                      }
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          // TODO: Implement forgot password navigation
-                        },
-                        child: Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                            color: Colors.green.shade900,
-                          ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(textFieldPadding),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/logo.png',
+                          height: imageSize,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.025),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState != null &&
-                                _formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              authenticateStudent();
+                        SizedBox(height: screenHeight * 0.02),
+                        TextFormField(
+                          controller: _usernameController,
+                          style: GoogleFonts.openSans(
+                            textStyle: TextStyle(
+                              fontFamily: 'Kalam',
+                              fontSize: fontSize,
+                            ),
+                          ),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Username",
+                            prefixIcon: Icon(Icons.person),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter your username";
                             }
+                            return null;
                           },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blue.shade900,
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: _isObscure,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Password",
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            ),
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.all(screenHeight * 0.01),
-                            child: Text("Sign In",
-                                style: GoogleFonts.openSans(
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Kalam',
-                                    fontSize: fontSize + 10,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please enter your password";
+                            }
+                            return null;
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                // TODO: Implement forgot password navigation
+                              },
+                              child: Text(
+                                "Forgot Password?",
+                                style: TextStyle(
+                                  color: Colors.green.shade900,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.025),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    authenticateStudent();
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.blue.shade900,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(screenHeight * 0.01),
+                                  child: Text(
+                                    "Sign In",
+                                    style: GoogleFonts.openSans(
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Kalam',
+                                        fontSize: fontSize + 10,
+                                      ),
+                                    ),
                                   ),
-                                )),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignupScreen(
+                                  email:
+                                      'xyzkharelp@gmail.com', // Updated to username
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Don't have an account? Sign up",
+                            style: TextStyle(
+                              color: Colors.green.shade900,
+                              fontSize: fontSize,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-// TODO: Implement sign up navigation
-// Navigator.push(
-// context,
-// MaterialPageRoute(
-// builder: (context) => SignUpPage(),
-// ),
-// );
-                    },
-                    child: Text(
-                      "Don't have an account? Sign up",
-                      style: TextStyle(
-                        color: Colors.green.shade900,
-                        fontSize: fontSize,
-                      ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -9,19 +9,13 @@ const addStudent = async (req, res) => {
       firstName,
       lastName,
       email,
+      username,
       password,
       specialization,
       year,
       semester,
-      section,
+      group,
     } = req.body;
-
-    const existingStudent = await Student.findOne({ email });
-    if (existingStudent) {
-      return res
-        .status(400)
-        .json({ msg: "Student with same email already exists" });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -29,11 +23,12 @@ const addStudent = async (req, res) => {
       firstName,
       lastName,
       email,
+      username,
       password: hashedPassword,
       specialization,
       year,
       semester,
-      section,
+      group,
     });
 
     newStudent = await newStudent.save();
@@ -43,26 +38,26 @@ const addStudent = async (req, res) => {
   }
 };
 
-const authenticateStudent = async (req,res) => {
+
+const authenticateStudent = async (req, res) => {
   try {
-    const {email,password} = req.body;
-    const student = await Student.findOne({email});
-    if(!student) {
-      return res.status(400).json({msg: "Student with this email does not exist"});
-    }
-    const isMatch = await bcrypt.compare(password,student.password)
-    if(!isMatch) {
-      return res.status(400).json({msg:"Incorrect Password"})
+    const { username, password } = req.body;  
+
+    const student = await Student.findOne({ username });  
+    if (!student) {
+      return res.status(400).json({ msg: "Student with this username does not exist" }); 
     }
 
-    const token = jwt.sign({id: student._id}, "passwordKey");
-    res.json({token, ...student._doc})
+    const isMatch = await bcrypt.compare(password, student.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Incorrect Password" });
+    }
+
+    const token = jwt.sign({ id: student._id }, "passwordKey");
+    res.json({ token, ...student._doc });
   } catch (e) {
-    res.status(500).json({error:e.message})
+    res.status(500).json({ error: e.message });
   }
-  
-
-
-}
+};
 
 module.exports = { addStudent, authenticateStudent };

@@ -1,22 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:provider/provider.dart';
 import 'package:easy_islington/features/gradehub/screens/year_screen.dart';
 import 'package:easy_islington/providers/assessment_schedule_provider.dart';
 import 'package:easy_islington/providers/class_schedule_provider.dart';
 import 'package:easy_islington/providers/student_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:easy_islington/router.dart';
 import 'features/auth/screens/home_screen.dart';
 import 'features/auth/screens/signup_screen.dart';
 import 'features/auth/screens/signin_screen.dart';
-import 'package:easy_islington/router.dart';
-
 import 'features/discussions/Screens/discussions_screen.dart';
 import 'features/grade_calculator/screens/calculator_screen.dart';
-
 import 'features/timetable/screens/schedule_screen.dart';
 import 'features/timetable/widgets/schedule_tile.dart';
 import 'providers/gradehub_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Needed for async operations before runApp
+  await FlutterConfig.loadEnvVariables(); // Load environment variables
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => StudentProvider(),
@@ -42,10 +45,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //
       onGenerateRoute: (settings) => generateRoutes(settings),
-      home: SigninScreen(),
-      //home: DashboardScreen(),
+      //home: SigninScreen(),
+      home: DashboardScreen(),
       //home: GradeCalculatorPage(),
       //home: YearScreen(),
     );

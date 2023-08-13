@@ -1,28 +1,24 @@
 import 'dart:convert';
 import 'package:easy_islington/features/auth/screens/home_screen.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_islington/constants/error_handling.dart';
 import 'package:easy_islington/providers/student_provider.dart';
 import 'package:easy_islington/constants/utils.dart';
-import '../../../providers/gradehub_provider.dart';
-import '../../assesment_schedule/services/get_assesment_schedule.dart';
-import '../../timetable/services/schedule_service.dart';
-import '../models/student.dart';
+// import '../../../providers/gradehub_provider.dart';
+// import '../../assesment_schedule/services/get_assesment_schedule.dart';
+// import '../../timetable/services/schedule_service.dart';
+// import '../models/student.dart';
 
 void signinStudent({
   required BuildContext context,
-  required String email,
+  required String username,
   required String password,
 }) async {
   try {
-    // Print the data being sent to the server for debugging
-    print(email);
-    print(password);
-
-    // Show a loading dialog to indicate that the request is being processed
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -32,16 +28,18 @@ void signinStudent({
       },
     );
 
-    // Make the HTTP POST request to the server and wait for the response
+    //String apiUrl = FlutterConfig.get('API_URL');
+
     http.Response res = await http.post(
-      Uri.parse('http://192.168.0.100:3000/api/signin'),
-      body: jsonEncode({"email": email, "password": password}),
+      //Uri.parse('$apiUrl/api/signin'),
+      Uri.parse('http://192.168.0.107:3000/api/signin'),
+      body: jsonEncode({"username": username, "password": password}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
 
-    // Handle the response according to the status code
+    // ignore: use_build_context_synchronously
     httpErrorHandle(
       response: res,
       context: context,
@@ -59,8 +57,8 @@ void signinStudent({
         // await getAssessmentData(context);
 
         // Fetch and set years data
-        await Provider.of<GradeHubProvider>(context, listen: false)
-            .fetchAndSetYears("12345");
+        // await Provider.of<GradeHubProvider>(context, listen: false)
+        //     .fetchAndSetYears("12345");
 
         Navigator.of(context).pop();
         Navigator.pushNamedAndRemoveUntil(
@@ -68,7 +66,6 @@ void signinStudent({
       },
     );
   } catch (e) {
-    // Handle any exceptions thrown during the request
     Navigator.of(context).pop();
     showSnackBar(context, e.toString());
   }

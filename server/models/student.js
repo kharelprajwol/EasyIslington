@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const studentSchema = mongoose.Schema({
-    firstName : {
+    firstName: {
         required: true,
         type: String,
         trim: true,
@@ -15,6 +15,13 @@ const studentSchema = mongoose.Schema({
         required: true,
         type: String,
         trim: true,
+        unique: true
+    },
+    username: {   
+        required: true,
+        type: String,
+        trim: true,
+        unique: true 
     },
     password: {
         required: true,
@@ -31,13 +38,12 @@ const studentSchema = mongoose.Schema({
     semester: {
         required: true,
         type: String
-
     },
-    section: {
+    group: {    // Changed from 'section' to 'group'
         required: true,
         type: String
     }
 })
 
-const Student =  mongoose.model("student",studentSchema);
-module.exports =  Student;
+const Student = mongoose.model("student", studentSchema);
+module.exports = Student;
