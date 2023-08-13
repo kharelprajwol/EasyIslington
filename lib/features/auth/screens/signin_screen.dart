@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../timetable/services/schedule_service.dart';
-import '../services/signin_service.dart';
+import '../auth_service.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
 
@@ -17,6 +17,7 @@ class _SigninScreenState extends State<SigninScreen>
   TextEditingController _passwordController = TextEditingController();
   bool _isObscure = true;
   bool _isLoading = false;
+  AuthService authService = AuthService();
 
   @override
   void initState() {
@@ -37,10 +38,12 @@ class _SigninScreenState extends State<SigninScreen>
   }
 
   void authenticateStudent() {
+    print(_usernameController.text);
+    print(_passwordController.text);
     setState(() {
       _isLoading = true;
     });
-    signinStudent(
+    authService.signinStudent(
         context: context,
         username: _usernameController.text,
         password: _passwordController.text);

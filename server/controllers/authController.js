@@ -54,7 +54,7 @@ const authenticateStudent = async (req, res) => {
     }
 
     const token = jwt.sign({ id: student._id }, "passwordKey");
-    res.json({ token, ...student._doc });
+    res.status(200).json({ token, ...student._doc });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

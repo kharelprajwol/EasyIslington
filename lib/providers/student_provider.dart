@@ -7,11 +7,12 @@ class StudentProvider extends ChangeNotifier {
     firstName: '',
     lastName: '',
     email: '',
+    username: '',
     password: '',
     specialization: '',
     year: '',
     semester: '',
-    section: '',
+    group: '',
     token: '',
   );
 

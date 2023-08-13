@@ -2,7 +2,6 @@ import 'package:easy_islington/features/discussions/Screens/discussions_screen.d
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 
 import '../../../providers/student_provider.dart';
 //import '../../assesment_schedule/screens/assesment_schedule_screen.dart';
@@ -11,43 +10,6 @@ import '../../timetable/screens/schedule_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String routeName = '/home';
-
-  // Function to load and show the PDF
-  Future<void> _displayPdf(BuildContext context) async {
-    try {
-      final document = await PDFDocument.fromAsset(
-          'assets/userManual.pdf'); // Load the PDF from assets
-
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text("User Manual"),
-            backgroundColor: Colors.red.shade900,
-          ),
-          body: PDFViewer(document: document),
-        ),
-      ));
-    } catch (e) {
-      print('Error loading PDF: $e'); // Print the error message
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('An error occurred while loading the PDF.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,19 +50,6 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 15),
-              TextButton(
-                onPressed: () => _displayPdf(context), // Call the function here
-                child: Text(
-                  'For detailed instructions, click here.',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -124,7 +73,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        student.email,
+                        student.username,
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       TextButton(

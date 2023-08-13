@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import '../services/signup_service.dart';
 
 class SignupScreen extends StatefulWidget {
   final String email;
@@ -43,19 +42,19 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {});
   }
 
-  void addStudent() {
-    print('hello');
-    signupStudent(
-        context: context,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        email: widget.email,
-        password: _passwordController.text,
-        specialization: _selectedSpecialisation,
-        year: _selectedYear.toString(),
-        semester: "1",
-        section: _selectedSection);
-  }
+  // void addStudent() {
+  //   print('hello');
+  //   signupStudent(
+  //       context: context,
+  //       firstName: _firstNameController.text,
+  //       lastName: _lastNameController.text,
+  //       email: widget.email,
+  //       password: _passwordController.text,
+  //       specialization: _selectedSpecialisation,
+  //       year: _selectedYear.toString(),
+  //       semester: "1",
+  //       section: _selectedSection);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +240,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         SnackBar(
                           content: Text('hehe'),
                         );
-                        addStudent();
+                        //addStudent();
                       }
                     },
                     child: Text('Finish Sign Up'),

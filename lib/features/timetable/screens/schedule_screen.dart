@@ -104,7 +104,7 @@ class _ClassScheduleScreenState extends State<ClassScheduleScreen> {
                     Text('Specialization: ${student.specialization}'),
                     Text('Year: ${student.year}'),
                     Text('Semester: ${student.semester}'),
-                    Text('Section: ${student.section}'),
+                    Text('Section: ${student.group}'),
                   ],
                 );
               }),

@@ -47,9 +47,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      onGenerateRoute: (settings) => generateRoutes(settings),
-      //home: SigninScreen(),
-      home: DashboardScreen(),
+      //onGenerateRoute: (settings) => generateRoutes(settings),
+      home: SigninScreen(),
+      //home: DashboardScreen(),
       //home: GradeCalculatorPage(),
       //home: YearScreen(),
     );

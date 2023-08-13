@@ -24,7 +24,7 @@ Future<List<Schedule>> getSchedule(BuildContext context) async {
         "specialization": student.specialization,
         "year": student.year,
         "semester": student.semester,
-        "section": student.section,
+        "section": student.group,
       }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
