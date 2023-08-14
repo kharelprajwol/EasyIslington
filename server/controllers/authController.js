@@ -60,4 +60,33 @@ const authenticateStudent = async (req, res) => {
   }
 };
 
-module.exports = { addStudent, authenticateStudent };
+const updateStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params; 
+
+    const updatedFields = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      specialization: req.body.specialization,
+      year: req.body.year,
+      semester: req.body.semester,
+      group: req.body.group,
+    };
+
+    // Remove undefined values
+    Object.keys(updatedFields).forEach(key => updatedFields[key] === undefined && delete updatedFields[key]);
+
+    const updatedStudent = await Student.findByIdAndUpdate(studentId, { $set: updatedFields }, { new: true });
+
+    if (!updatedStudent) {
+      return res.status(404).json({ msg: "Student not found" });
+    }
+
+    res.json(updatedStudent);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+};
+
+module.exports = { addStudent, authenticateStudent, updateStudent };

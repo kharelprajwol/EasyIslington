@@ -1,8 +1,6 @@
-// src/components/Login.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';  // Import the CSS
+import './Login.css'; 
 
 function Login() {
   const [credentials, setCredentials] = useState({
@@ -20,34 +18,34 @@ function Login() {
     }));
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Dummy check for specific username and password
-    if (credentials.username === 'admin' && credentials.password === 'password') {
+    try {
+      const response = await fetch('http://localhost:3000/admin/login-admin', { 
+        method: 'POST',
+        body: JSON.stringify(credentials),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Optionally store the token if the server sends one
+        // For example: localStorage.setItem('token', data.token);
         navigate('/home');
       } else {
-        alert('Invalid username or password');
+        alert(data.message || 'Invalid username or password');
       }
-      
 
-    // TODO: Use an actual POST method to validate login credentials
-    // fetch('/api/login', { 
-    //   method: 'POST',
-    //   body: JSON.stringify(credentials),
-    //   headers: { 'Content-Type': 'application/json' },
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   if (data.success) {
-    //     navigate('/dashboard');
-    //   } else {
-    //     alert('Invalid username or password');
-    //   }
-    // })
-    // .catch(error => {
-    //   console.error('Error:', error);
-    // });
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Something went wrong. Please try again later.');
+    }
   }
 
   return (

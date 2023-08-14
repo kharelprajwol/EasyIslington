@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:easy_islington/constants/error_handling.dart';
-import 'package:easy_islington/features/auth/screens/home_screen.dart';
+import 'package:easy_islington/features/dashboard/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../../constants/utils.dart';
 import '../../providers/student_provider.dart';
+import '../class_schedule/class_schedule_service.dart';
 import './models/student.dart';
 
 class AuthService {
@@ -42,6 +43,7 @@ class AuthService {
 
         Provider.of<StudentProvider>(context, listen: false)
             .setStudent(res.body);
+        getSchedule(context);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DashboardScreen()),

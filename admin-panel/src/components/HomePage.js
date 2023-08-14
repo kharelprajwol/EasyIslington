@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import Dashboard from './Dashboard';
-import ManageStudents from './ManageStudents'; // Ensure Dashboard is correctly imported
-import ManageAdmins from './ManageAdmins';
-import Programmes from './Programmes';
-// ... import other components if needed...
-import './HomePage.css';
+import Students from './Students'; // Ensure Dashboard is correctly imported
+import Admins from './Admins';
 import Schedules from './Schedules';
+
+import './HomePage.css';
 
 function HomePage() {
     const [selectedComponent, setSelectedComponent] = useState('dashboard');
@@ -17,19 +15,15 @@ function HomePage() {
 
     const renderComponent = () => {
         switch (selectedComponent) {
-            case 'dashboard':
-                return <Dashboard />;
-            case 'programmes':
-                return <Programmes />;
-            case 'manage-students':
-                return <ManageStudents />;
-            case 'manage-admins':
-                return <ManageAdmins />;
+            case 'students':
+                return <Students />;
+            case 'admins':
+                return <Admins />;
             case 'schedules':
                 return <Schedules />;    
             // Add cases for other components when imported
             default:
-                return <Dashboard />;
+                return <Students />;
         }
     };
 

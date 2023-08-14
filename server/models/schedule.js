@@ -23,11 +23,31 @@ const classSchema = new mongoose.Schema({
   },
   start_time: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^(\d{1,2}:\d{2}\s?(AM|PM)?)$/i.test(v);
+      },
+      message: props => `${props.value} is not a valid time format!`
+    }
   },
   end_time: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^(\d{1,2}:\d{2}\s?(AM|PM)?)$/i.test(v);
+      },
+      message: props => `${props.value} is not a valid time format!`
+    }
+  },
+  hasNotification: {
+    type: Boolean,
+    default: false,
+  },
+  notificationTimeBeforeStart: { 
+    type: Number,
+    default: 15, 
   }
 });
 
@@ -54,29 +74,28 @@ const sectionSchema = new mongoose.Schema({
 });
 
 const semesterSchema = new mongoose.Schema({
-    semester_number: {
-      type: String,
-      required: true
-    },
-    sections: {
-      type: [sectionSchema],
-      required: true
-    }
-  });
+  semester_number: {
+    type: String,
+    required: true
+  },
+  sections: {
+    type: [sectionSchema],
+    required: true
+  }
+});
   
-  const yearSchema = new mongoose.Schema({
-    year_number: {
-      type: String,
-      required: true
-    },
-    semesters: {
-      type: [semesterSchema],
-      required: true
-    }
-  });
+const yearSchema = new mongoose.Schema({
+  year_number: {
+    type: String,
+    required: true
+  },
+  semesters: {
+    type: [semesterSchema],
+    required: true
+  }
+});
   
-
-const specializationSchema = new mongoose.Schema({
+const scheduleSchema = new mongoose.Schema({
   specialization_name: {
     type: String,
     required: true
@@ -87,5 +106,5 @@ const specializationSchema = new mongoose.Schema({
   }
 });
 
-const Schedule = mongoose.model('schedule', specializationSchema);
+const Schedule = mongoose.model('schedules', scheduleSchema);
 module.exports = Schedule;

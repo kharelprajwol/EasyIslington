@@ -1,18 +1,18 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Student {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String username;
-  final String password;
-  final String specialization;
-  final String year;
-  final String semester;
-  final String group;
-  final String token;
+  String id;
+  String firstName;
+  String lastName;
+  String email;
+  String username;
+  String password;
+  String specialization;
+  String year;
+  String semester;
+  String group;
+  String token;
+
   Student({
     required this.id,
     required this.firstName,
@@ -27,8 +27,22 @@ class Student {
     required this.token,
   });
 
+  Student.update({
+    required this.id,
+    this.firstName = '',
+    this.lastName = '',
+    this.email = '',
+    this.username = '',
+    this.password = '',
+    this.specialization = '',
+    this.year = '',
+    this.semester = '',
+    this.group = '',
+    this.token = '',
+  });
+
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'firstName': firstName,
       'lastName': lastName,
@@ -45,17 +59,17 @@ class Student {
 
   factory Student.fromMap(Map<String, dynamic> map) {
     return Student(
-      id: map['_id'] as String,
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      username: map['username'] as String,
-      password: map['password'] as String,
-      specialization: map['specialization'] as String,
-      year: map['year'] as String,
-      semester: map['semester'] as String,
-      group: map['group'] as String,
-      token: map['token'] as String,
+      id: map['_id'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      email: map['email'],
+      username: map['username'],
+      password: map['password'],
+      specialization: map['specialization'],
+      year: map['year'],
+      semester: map['semester'],
+      group: map['group'],
+      token: map['token'],
     );
   }
 

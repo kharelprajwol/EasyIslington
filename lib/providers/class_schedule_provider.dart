@@ -1,4 +1,4 @@
-import 'package:easy_islington/features/timetable/models/schedule.dart';
+import 'package:easy_islington/features/class_schedule/models/class_schedule.dart';
 import 'package:flutter/material.dart';
 
 class ClassScheduleProvider extends ChangeNotifier {

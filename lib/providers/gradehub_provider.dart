@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../features/gradehub/models/assessment.dart';
-import '../features/gradehub/models/module.dart';
-import '../features/gradehub/models/year.dart';
-import '../features/gradehub/gradehub_service.dart';
+import '../features/my_grades/models/assessment.dart';
+import '../features/my_grades/models/module.dart';
+import '../features/my_grades/models/year.dart';
+import '../features/my_grades/my_grades_service.dart';
 
 class GradeHubProvider with ChangeNotifier {
   List<Year> _years = [];

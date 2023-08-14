@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../timetable/services/schedule_service.dart';
+import '../../class_schedule/class_schedule_service.dart';
 import '../auth_service.dart';
-import 'home_screen.dart';
+import '../../dashboard/home_screen.dart';
 import 'signup_screen.dart';
 
 class SigninScreen extends StatefulWidget {
