@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import Students from './Students'; // Ensure Dashboard is correctly imported
-import Admins from './Admins';
+import Students from './students/Students'; // Ensure Dashboard is correctly imported
+import Admins from './admins/Admins';
 import Schedules from './Schedules';
 
 import './HomePage.css';

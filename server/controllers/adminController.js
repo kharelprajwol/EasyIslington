@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const Admin = require('../models/admin'); 
+const Admin = require('../models/admin');
+const Student = require('../models/student');
 
 const SALT_ROUNDS = 10;
 
@@ -164,3 +165,64 @@ exports.deleteAdmin = async (req, res) => {
         });
     }
 };
+
+// Get All Admins
+exports.getAdmins = async (req, res) => {
+   
+    try {
+        const admins = await Admin.find({}); // Fetch all admins from the database
+
+        res.status(200).json({
+            success: true,
+            data: admins
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.'
+        });
+    }
+};
+
+exports.getStudents = async (req, res) => {
+    try {
+        const students = await Student.find({}); // Fetch all students from the database
+
+        res.status(200).json({
+            success: true,
+            data: students
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.'
+        });
+    }
+};
+
+exports.updateStudent = async (req, res) => {
+    const { id } = req.params;
+    const { firstName, lastName, specialization, year, semester, section } = req.body;
+
+    try {
+        const updatedStudent = await Student.findByIdAndUpdate(
+            id,
+            { firstName, lastName, specialization, year, semester, section },
+            { new: true } // This option ensures the function returns the updated version of the document.
+        );
+
+        if (!updatedStudent) {
+            return res.status(404).json({ success: false, message: 'Student not found!' });
+        }
+
+        res.status(200).json({ success: true, student: updatedStudent });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};
+
