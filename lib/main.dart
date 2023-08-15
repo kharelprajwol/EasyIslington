@@ -45,6 +45,9 @@ class MyApp extends StatelessWidget {
       ),
       //onGenerateRoute: (settings) => generateRoutes(settings),
       home: SigninScreen(),
+      // home: SignupScreen(
+      //   email: 'np01cp4s200076@islingtoncollege.edu.np',
+      // ),
       //home: DashboardScreen(),
       //home: GradeCalculatorPage(),
       //home: YearScreen(),

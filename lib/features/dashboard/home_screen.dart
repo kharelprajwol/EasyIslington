@@ -1,4 +1,6 @@
+import 'package:easy_islington/features/auth/screens/signin_screen.dart';
 import 'package:easy_islington/features/class_schedule/class_schedule_service.dart';
+import 'package:easy_islington/features/dashboard/change_password_screen.dart';
 import 'package:easy_islington/features/dashboard/edit_profile_screen.dart';
 import 'package:easy_islington/features/discussions/Screens/discussions_screen.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +117,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => YearScreen()),
                 );
@@ -171,6 +173,11 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
               onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangePasswordScreen()),
+                );
                 // Handle the tap action for "Change Password"
                 // You can navigate to a ChangePasswordScreen or show a dialog
               },
@@ -188,6 +195,9 @@ class DashboardScreen extends StatelessWidget {
               ),
               onTap: () {
                 // Handle Logout button press
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => SigninScreen()),
+                    (Route<dynamic> route) => false);
               },
             ),
           ],

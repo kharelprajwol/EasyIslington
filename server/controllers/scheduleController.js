@@ -3,6 +3,14 @@ const Schedule = require('../models/schedule');
 const getSchedule = async (req, res) => {
   try {
     const { specialization, year, semester, section } = req.body;
+    console.log(`Type of specialization: ${typeof specialization}`);
+    console.log(specialization);
+
+    if (specialization === 'BSc (Hons) Computing') {
+      console.log('Specialization is exactly "BSc (Hons) Computing"');
+  } else {
+      console.log('Specialization is NOT "BSc (Hons) Computing"');
+  }
 
     // Find the specialization object in the database
     const specializationObj = await Schedule.findOne({ specialization_name: specialization });
@@ -25,7 +33,7 @@ const getSchedule = async (req, res) => {
     // Find the section object in the semester
     const sectionObj = semesterObj.sections.find(s => s.section_name === section);
     if (!sectionObj) {
-      return res.status(404).json({ error: `Section ${section} not found for semester ${semester} in year ${year} of specialization ${specialization}` });
+      return res.status(404).json({ error: `section ${section} not found for semester ${semester} in year ${year} of specialization ${specialization}` });
     }
 
     res.send(sectionObj['days']);

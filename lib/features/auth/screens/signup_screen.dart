@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../auth_service.dart';
+
 class SignupScreen extends StatefulWidget {
   final String email;
 
@@ -15,11 +17,16 @@ class _SignupScreenState extends State<SignupScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
 
   bool _obscureText = true;
 
-  List<String> specializations = ['A', 'B', 'C'];
-  var _selectedSpecialisation;
+  List<String> specializations = [
+    'BSc (Hons) Computing',
+    'BSc (Hons) Computer Networking',
+    'BSc (Hons) Multimedia Technologies'
+  ];
+  var _selectedSpecialisation = null;
 
   List<int> years = [1, 2, 3];
   int? _selectedYear;
@@ -27,34 +34,40 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isFirstSemesterSelected = false;
   bool _isSecondSemesterSelected = false;
 
-  List<String> sections = ['C10', 'C11', 'C12'];
+  List<String> sections = ['C12', 'C15'];
   var _selectedSection;
 
+  AuthService authService = AuthService();
+
+  @override
   @override
   void initState() {
     super.initState();
     _firstNameController.addListener(_handleTextChange);
     _lastNameController.addListener(_handleTextChange);
     _passwordController.addListener(_handleTextChange);
+
+    // Extracting the username part from the email
+    _usernameController.text = widget.email.split('@').first;
   }
 
   void _handleTextChange() {
     setState(() {});
   }
 
-  // void addStudent() {
-  //   print('hello');
-  //   signupStudent(
-  //       context: context,
-  //       firstName: _firstNameController.text,
-  //       lastName: _lastNameController.text,
-  //       email: widget.email,
-  //       password: _passwordController.text,
-  //       specialization: _selectedSpecialisation,
-  //       year: _selectedYear.toString(),
-  //       semester: "1",
-  //       section: _selectedSection);
-  // }
+  void addStudent() {
+    authService.signupStudent(
+        context: context,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        username: _usernameController.text,
+        email: widget.email,
+        password: _passwordController.text,
+        specialization: _selectedSpecialisation,
+        year: _selectedYear.toString(),
+        semester: "1",
+        group: _selectedSection);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +116,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       }
                       return null;
                     },
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _usernameController,
+                    enabled: false, // This makes it non-editable
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                    ),
                   ),
                   SizedBox(height: 16),
                   TextFormField(
@@ -236,11 +257,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        print('hello');
-                        SnackBar(
-                          content: Text('hehe'),
-                        );
-                        //addStudent();
+                        addStudent();
                       }
                     },
                     child: Text('Finish Sign Up'),

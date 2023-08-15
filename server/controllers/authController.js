@@ -89,4 +89,72 @@ const updateStudent = async (req, res) => {
   }
 };
 
-module.exports = { addStudent, authenticateStudent, updateStudent };
+
+const checkOldPassword = async (req, res) => {
+  const { studentId, password } = req.body; // Assuming the student's unique ID and password are passed in the body.
+
+  try {
+      const student = await Student.findOne(studentId);
+      if (!student) {
+          return res.status(404).send({ message: 'Student not found' });
+      }
+
+      // Using bcrypt to compare the plain password with its hashed version.
+      bcrypt.compare(password, student.password, (err, isMatch) => {
+        if (err) {
+            return res.status(500).send({ message: 'Server error during password comparison' });
+        }
+
+        if (isMatch) {
+            res.send({ isValid: true });
+        } else {
+            res.send({ isValid: false });
+        }
+    });
+  } catch (err) {
+      res.status(500).send({ message: 'Server error' });
+  }
+};
+
+
+const updatePassword = async (req, res) => {
+  const { studentId, newPassword } = req.body;
+
+  try {
+      // Hash the new password using bcrypt
+      const hashedPassword = await bcrypt.hash(newPassword, 10); // '10' is the number of salt rounds.
+
+      // Update the password in the database with the hashed version
+      const result = await Student.updateOne({ _id: studentId }, { $set: { password: hashedPassword } });
+      
+      if (result.modifiedCount === 1) {
+          res.send({ success: true });
+      } else {
+          res.status(400).send({ message: 'Failed to update password' });
+      }
+  } catch (err) {
+      res.status(500).send({ message: 'Server error' });
+  }
+};
+
+
+const checkEmailInDatabase = async (req, res) => {
+  try {
+      const { email } = req.body; // Assuming the email is passed in the body.
+
+      const student = await Student.findOne({ email });
+      
+      if (student) {
+          return res.status(200).json({ exists: true });
+      } else {
+          return res.status(200).json({ exists: false });
+      }
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+};
+
+// Add checkEmailInDatabase to your exports
+module.exports = { addStudent, authenticateStudent, updateStudent, checkOldPassword, updatePassword, checkEmailInDatabase };
+
+

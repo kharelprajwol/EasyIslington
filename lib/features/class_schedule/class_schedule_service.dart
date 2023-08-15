@@ -1,23 +1,20 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import 'package:easy_islington/providers/student_provider.dart';
-
 import '../../constants/error_handling.dart';
 import '../../constants/utils.dart';
 import '../../providers/class_schedule_provider.dart';
 import 'models/class_schedule.dart';
-//import 'screens/schedule_screen.dart';
 
 Future<List<Schedule>> getSchedule(BuildContext context) async {
   try {
     final studentProvider =
         Provider.of<StudentProvider>(context, listen: false);
     final student = studentProvider.student;
+
+    print(student.specialization);
 
     http.Response res = await http.post(
       Uri.parse('http://192.168.0.107:3000/api/schedules'),
@@ -33,8 +30,7 @@ Future<List<Schedule>> getSchedule(BuildContext context) async {
     );
 
     List<Schedule> schedules = [];
-// Fetch the ClassScheduleProvider instance outside the async part
-// Fetch the ClassScheduleProvider instance outside of the async function
+
     var classScheduleProvider =
         Provider.of<ClassScheduleProvider>(context, listen: false);
 
@@ -72,6 +68,7 @@ Future<List<Schedule>> getSchedule(BuildContext context) async {
 
     return schedules;
   } catch (e) {
+    print(e.toString());
     showSnackBar(context, e.toString());
     return [];
   }

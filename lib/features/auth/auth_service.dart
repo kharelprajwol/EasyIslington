@@ -9,6 +9,7 @@ import '../../constants/utils.dart';
 import '../../providers/student_provider.dart';
 import '../class_schedule/class_schedule_service.dart';
 import './models/student.dart';
+import 'screens/signin_screen.dart';
 
 class AuthService {
   final String apiUrl = 'http://192.168.0.107:3000/api';
@@ -43,9 +44,10 @@ class AuthService {
 
         Provider.of<StudentProvider>(context, listen: false)
             .setStudent(res.body);
+
         getSchedule(context);
-        Navigator.push(
-          context,
+
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => DashboardScreen()),
         );
       } else {
@@ -100,7 +102,7 @@ class AuthService {
       );
 
       http.Response res = await http.post(
-        Uri.parse('$apiUrl/api/signup'),
+        Uri.parse('$apiUrl/signup'),
         body: student.toJson(),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -110,10 +112,61 @@ class AuthService {
       httpErrorHandle(
         response: res,
         context: context,
-        onSuccess: () => showSnackBar(context, 'Account created successfully!'),
+        onSuccess: () {
+          showSnackBar(context,
+              'Account created successfully! You will now be navigated to the sign-in page.');
+          Future.delayed(Duration(seconds: 4), () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  SigninScreen(), // Assuming this is the name of your sign-in screen widget
+            ));
+          });
+        },
       );
     } catch (e) {
       showSnackBar(context, 'Error: ${e.toString()}');
+    }
+  }
+
+  Future<Map<String, dynamic>> checkEmailExists({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse(
+            '$apiUrl/check-email'), // Assuming 'checkEmail' is the endpoint for the checkEmailInDatabase controller
+        body: json.encode({"email": email}),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (res.statusCode == 200) {
+        Map<String, dynamic> responseBody = json.decode(res.body);
+        if (responseBody.containsKey('exists') &&
+            responseBody['exists'] == true) {
+          return {
+            'status': false,
+            'message': 'Email already exists',
+          };
+        } else {
+          return {
+            'status': true,
+            'message': 'Email does not exist',
+          };
+        }
+      } else {
+        return {
+          'status': false,
+          'message': 'Failed to check email existence. Please try again.',
+        };
+      }
+    } catch (e) {
+      return {
+        'status': false,
+        'message': 'Error: ${e.toString()}',
+      };
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_islington/features/auth/screens/email_confirmation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../class_schedule/class_schedule_service.dart';
@@ -171,16 +172,14 @@ class _SigninScreenState extends State<SigninScreen>
                             ),
                           ],
                         ),
+                        //
                         TextButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SignupScreen(
-                                  email:
-                                      'xyzkharelp@gmail.com', // Updated to username
-                                ),
-                              ),
+                                  builder: (context) =>
+                                      EmailConfirmationPage()),
                             );
                           },
                           child: Text(

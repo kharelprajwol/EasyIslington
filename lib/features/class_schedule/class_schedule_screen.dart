@@ -69,15 +69,15 @@ class _ClassScheduleScreenState extends State<ClassScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => DashboardScreen()),
-            );
-          },
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pushReplacement(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => DashboardScreen()),
+        //     );
+        //   },
+        // ),
         title: Text('Class Schedule',
             style: GoogleFonts.openSans(
               textStyle: TextStyle(
@@ -132,7 +132,7 @@ class _ClassScheduleScreenState extends State<ClassScheduleScreen> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Group: ${student.group}',
+                            'section: ${student.group}',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
