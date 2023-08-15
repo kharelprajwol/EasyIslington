@@ -10,10 +10,14 @@ router.get('/admins', adminController.getAdmins);
 router.post('/login-admin', adminController.loginAdmin);
 router.post('/add-admin', adminController.addAdmin);
 router.put('/edit-admin/:adminId', adminController.editAdmin);
-router.put('/reset-password/:adminId', adminController.resetPassword);
+router.put('/reset-admin-password/:adminId', adminController.resetAdminPassword);
 router.delete('/delete-admin/:adminId', adminController.deleteAdmin);
+router.post('/change-admin-password/:adminId', adminController.changeAdminPassword);
 
 router.get('/students', adminController.getStudents);
 router.put('/edit-student/:id', adminController.updateStudent);
+router.put('/reset-student-password/:studentId', adminController.resetStudentPassword);
+router.get('/total-students', adminController.getTotalStudents);
+router.get('/total-posts', adminController.getTotalPostCount);
 
 module.exports = router;

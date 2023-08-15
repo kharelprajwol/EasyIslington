@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
+import '../../../providers/student_provider.dart';
 import '../Screens/discussions_screen.dart';
 import '../discussions_service.dart';
 
 class CreatePostScreen extends StatefulWidget {
+  final Function refresh;
+
+  CreatePostScreen({required this.refresh});
+
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
 }
@@ -15,8 +22,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   Future<void> createPost(String title, String content) async {
     try {
+      final studentSpecialization =
+          Provider.of<StudentProvider>(context, listen: false)
+              .student
+              .specialization;
+
       await discussionsService.createPost(
-        specialization: 'Computer',
+        specialization: studentSpecialization,
         title: title,
         content: content,
         author: 'prajwol',
@@ -30,13 +42,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Create Post',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Colors.red,
+        title: Text('Create Post',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontFamily: 'Kalam',
+                fontSize: 25,
+              ),
+            )),
+        backgroundColor: Colors.red.shade900,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,12 +99,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 final content = _contentController.text;
                 if (title.isNotEmpty && content.isNotEmpty) {
                   await createPost(title, content);
+                  widget.refresh();
 
                   // Navigate to ForumScreen
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ForumScreen()),
-                  );
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => ForumScreen()),
+                  // );
+
+                  Navigator.of(context).pop();
                 } else {
                   // Show an error or validation message if title or content is empty
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -107,7 +123,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
+                primary: Colors.blue.shade600,
               ),
             ),
           ],

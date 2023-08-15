@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/student_provider.dart';
 import '../discussions_service.dart';
 import '../widgets/create_post_screen.dart';
 import '../widgets/post_list.dart';
@@ -25,8 +28,13 @@ class _ForumScreenState extends State<ForumScreen> {
 
   Future<void> fetchPosts() async {
     try {
+      final studentSpecialization =
+          Provider.of<StudentProvider>(context, listen: false)
+              .student
+              .specialization;
+
       final List<Post> fetchedPosts =
-          await discussionsService.fetchPosts('Computer');
+          await discussionsService.fetchPosts(studentSpecialization);
       setState(() {
         posts = fetchedPosts;
       });
@@ -35,25 +43,44 @@ class _ForumScreenState extends State<ForumScreen> {
     }
   }
 
+  void refreshPosts() {
+    setState(() {
+      fetchPosts();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final studentSpecialization =
+        Provider.of<StudentProvider>(context).student.specialization;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Posts',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Colors.red,
+        title: Text('Posts',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontFamily: 'Kalam',
+                fontSize: 30,
+              ),
+            )),
+        backgroundColor: Colors.red.shade900,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'Note: These following posts are of your specialization; $studentSpecialization. If you want to view the posts of other specializations, please update your profile.',
+                style: TextStyle(
+                  fontFamily: 'Kalam',
+                  color: Colors.black, // Giving it a red color for emphasis
+                  fontSize: 14,
+                ),
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: posts.length,
@@ -93,11 +120,11 @@ class _ForumScreenState extends State<ForumScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreatePostScreen(),
+              builder: (context) => CreatePostScreen(refresh: refreshPosts),
             ),
           );
         },
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue.shade600,
         child: Icon(Icons.add, color: Colors.white),
       ),
     );

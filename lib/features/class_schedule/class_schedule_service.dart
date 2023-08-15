@@ -33,10 +33,21 @@ Future<List<Schedule>> getSchedule(BuildContext context) async {
     );
 
     List<Schedule> schedules = [];
+// Fetch the ClassScheduleProvider instance outside the async part
+// Fetch the ClassScheduleProvider instance outside of the async function
+    var classScheduleProvider =
+        Provider.of<ClassScheduleProvider>(context, listen: false);
+
+// ignore: use_build_context_synchronously
     httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
+          // If schedules are not empty, clear them
+          if (classScheduleProvider.schedules.isNotEmpty) {
+            classScheduleProvider.clearSchedules();
+          }
+
           List<dynamic> data = jsonDecode(res.body);
           data.forEach((scheduleData) {
             List<dynamic> classes = scheduleData['classes'];
@@ -52,8 +63,8 @@ Future<List<Schedule>> getSchedule(BuildContext context) async {
                 day: scheduleData['day_name'],
                 classType: classData['class_type'],
               );
-              Provider.of<ClassScheduleProvider>(context, listen: false)
-                  .addSchedule(schedule);
+
+              classScheduleProvider.addSchedule(schedule);
               schedules.add(schedule);
             });
           });

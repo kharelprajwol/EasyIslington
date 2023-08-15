@@ -6,9 +6,12 @@ function Students() {
     const [specializationFilter, setSpecializationFilter] = useState('');
     const [yearFilter, setYearFilter] = useState('');
     const [semesterFilter, setSemesterFilter] = useState('');
-    const [sectionFilter, setSectionFilter] = useState('');
+    const [groupFilter, setgroupFilter] = useState('');
     const [students, setStudents] = useState([]);
+    const [newPasswordModalOpen, setNewPasswordModalOpen] = useState(false);
+const [newPassword, setNewPassword] = useState("");
 
+let filteredStudents = [];
 
     useEffect(() => {
         fetch('http://localhost:3000/admin/students')
@@ -28,20 +31,20 @@ function Students() {
     }, []); 
     
 
-    let filteredStudents = [];
+    
 
     if (Array.isArray(students)) {
         filteredStudents = students.filter(student => {
             const isSpecializationMatch = !specializationFilter || student.specialization === specializationFilter;
             const isYearMatch = !yearFilter || student.year === yearFilter;
             const isSemesterMatch = !semesterFilter || student.semester === semesterFilter;
-            const isSectionMatch = !sectionFilter || student.section === sectionFilter;
+            const isgroupMatch = !groupFilter || student.group === groupFilter;
             
             const isSearchMatch = !searchQuery || Object.values(student).some(val => 
                 String(val).toLowerCase().includes(searchQuery.toLowerCase())
             );
     
-            return isSpecializationMatch && isYearMatch && isSemesterMatch && isSectionMatch && isSearchMatch;
+            return isSpecializationMatch && isYearMatch && isSemesterMatch && isgroupMatch && isSearchMatch;
         });
     }
     
@@ -55,7 +58,7 @@ function Students() {
         specialization: '',
         year: '',
         semester: '',
-        section: ''
+        group: ''
     });
 
     const handleEditStudent = (index) => {
@@ -66,7 +69,7 @@ function Students() {
 
     const handleSaveEdit = () => {
         // Sending updated data to the server.
-        fetch(`http://localhost:3000/admin/edit-student/${editedStudent.id}`, { 
+        fetch(`http://localhost:3000/admin/edit-student/${editedStudent._id}`, { 
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -96,15 +99,63 @@ function Students() {
     };
     
 
-    const handleDeleteStudent = (index) => {
-        const newStudents = [...students];
-        newStudents.splice(index, 1);
-        setStudents(newStudents);
+    const generateRandomPassword = (length = 8) => {
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+        return password;
+    }
+    
+    const handleResetStudentPassword = (index) => {
+        const studentId = filteredStudents[index]._id;
+        const generatedPassword = generateRandomPassword();
+        fetch(`http://localhost:3000/admin/reset-student-password/${studentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ newPassword: generatedPassword })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('Password reset successfully.');
+                setNewPassword(generatedPassword);
+                setNewPasswordModalOpen(true);
+            } else {
+                console.error('Error resetting password:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error("There was a problem with the fetch operation:", error.message);
+        });
     };
+
+    const handleSendEmail = async () => {
+        // Logic to send newPassword via email.
+        try {
+            // Your logic to send email goes here...
+            // Example:
+            // await sendEmailFunction(newPassword);
+    
+            console.log("Password sent via email!");
+        } catch (error) {
+            console.error("Error sending password via email:", error);
+        }
+    };
+    
 
     return (
         <div>
-            {/* Filter & Search Section */}
+            {/* Filter & Search group */}
             <div className="filter-bar">
                 <input 
                     type="text" 
@@ -133,11 +184,11 @@ function Students() {
                     <option value="2">2</option>
                     {/* ... Add other semesters */}
                 </select>
-                <select className="dropdown" onChange={(e) => setSectionFilter(e.target.value)}>
-                    <option value="">All Sections</option>
+                <select className="dropdown" onChange={(e) => setgroupFilter(e.target.value)}>
+                    <option value="">All groups</option>
                     <option value="C12">C12</option>
                     <option value="C15">C15</option>
-                    {/* ... Add other sections */}
+                    {/* ... Add other groups */}
                 </select>
             </div>
 
@@ -151,7 +202,7 @@ function Students() {
             <th>Specialization</th>
             <th>Year</th>
             <th>Semester</th>
-            <th>Section</th>
+            <th>group</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -168,7 +219,7 @@ function Students() {
                 <td>{student.group}</td>
                 <td>
                     <button onClick={() => handleEditStudent(index)}>Edit Details</button>
-                    <button onClick={() => handleDeleteStudent(index)}>Reset Password</button>
+                    <button onClick={() => handleResetStudentPassword(index)}>Reset Password</button>
                 </td>
             </tr>
         ))}
@@ -246,11 +297,11 @@ function Students() {
             </div>
 
             <div className="label-input-group">
-                <label>Section:</label>
+                <label>group:</label>
                 <input
                     type="text"
                     value={editedStudent.group}
-                    onChange={(e) => setEditedStudent(prev => ({ ...prev, section: e.target.value }))}
+                    onChange={(e) => setEditedStudent(prev => ({ ...prev, group: e.target.value }))}
                 />
             </div>
 
@@ -261,6 +312,21 @@ function Students() {
         </div>
     </div>
 )}
+
+{newPasswordModalOpen && (
+    <div className="modal-overlay">
+        <div className="modal-content">
+            <p>New password: <strong>{newPassword}</strong></p>
+            {/* New button for sending via email */}
+            <button onClick={handleSendEmail}>Share</button>
+            <button onClick={() => setNewPasswordModalOpen(false)}>Close</button>
+
+            
+        </div>
+    </div>
+)}
+
+
 
 
         </div>

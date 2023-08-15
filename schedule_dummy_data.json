@@ -65,21 +65,12 @@
                         "class_type": "Lecture"
                       },
                       {
-                        "module_title": "Application Development",
-                        "instructor_name": "Himalaya Sunuwar",
-                        "room": "Hall-2",
-                        "block": "Kumari Block",
-                        "start_time": "8:30 AM",
-                        "end_time": "10:00 AM",
-                        "class_type": "Lecture"
-                      },
-                      {
-                        "module_title": "Application Development",
-                        "instructor_name": "Himalaya Sunuwar",
-                        "room": "Hall-2",
-                        "block": "Kumari Block",
-                        "start_time": "8:30 AM",
-                        "end_time": "10:00 AM",
+                        "module_title": "Work Related Learning",
+                        "instructor_name": "Umesh Nepal",
+                        "room": "LT-03",
+                        "block": "London Block",
+                        "start_time": "8:00 AM",
+                        "end_time": "9:00 AM",
                         "class_type": "Lecture"
                       }
                     ]
@@ -99,12 +90,87 @@
                     ]
                   }
                 ]
+              },
+              {
+                "section_name": "C15",
+                "days": [
+                  {
+                    "day_name": "Sunday",
+                    "classes": [
+                      {
+                        "module_title": "Web Application Design",
+                        "instructor_name": "Nabin Sharma",
+                        "room": "Lab-12",
+                        "block": "Skill Block",
+                        "start_time": "10:00 AM",
+                        "end_time": "12:00 PM",
+                        "class_type": "Workshop"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Monday",
+                    "classes": [
+                      {
+                        "module_title": "Data Analytics",
+                        "instructor_name": "Rita Oli",
+                        "room": "TR03",
+                        "block": "Nepal Block",
+                        "start_time": "11:30 AM",
+                        "end_time": "1:30 PM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Wednesday",
+                    "classes": [
+                      {
+                        "module_title": "Cloud Computing",
+                        "instructor_name": "Kiran Lama",
+                        "room": "LT-04",
+                        "block": "London Block",
+                        "start_time": "9:00 AM",
+                        "end_time": "10:30 AM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Thursday",
+                    "classes": [
+                      {
+                        "module_title": "System Analysis",
+                        "instructor_name": "Laxman Bhattarai",
+                        "room": "Hall-3",
+                        "block": "Kumari Block",
+                        "start_time": "10:30 AM",
+                        "end_time": "12:00 PM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  },
+                  {
+                    "day_name": "Friday",
+                    "classes": [
+                      {
+                        "module_title": "Digital Design",
+                        "instructor_name": "Anita Gurung",
+                        "room": "Hall-3",
+                        "block": "Kumari Block",
+                        "start_time": "8:30 AM",
+                        "end_time": "10:00 AM",
+                        "class_type": "Lecture"
+                      }
+                    ]
+                  }
+                ]
               }
-              
             ]
           }
         ]
       }
     ]
-  }]
+  }
+]
   

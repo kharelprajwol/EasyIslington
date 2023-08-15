@@ -45,4 +45,9 @@ class ClassScheduleProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void clearSchedules() {
+    _schedules.clear();
+    notifyListeners();
+  }
 }

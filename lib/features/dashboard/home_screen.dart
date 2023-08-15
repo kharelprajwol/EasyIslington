@@ -89,7 +89,13 @@ class DashboardScreen extends StatelessWidget {
                         },
                         child: Text(
                           'Edit Profile',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                          style: GoogleFonts.openSans(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Kalam',
+                              fontSize: fontSize - 5,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -154,8 +160,32 @@ class DashboardScreen extends StatelessWidget {
             ),
             Divider(),
             ListTile(
+              leading: Icon(Icons.lock_open),
+              title: Text(
+                'Change Password',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontFamily: 'Kalam',
+                    fontSize: fontSize - 5,
+                  ),
+                ),
+              ),
+              onTap: () {
+                // Handle the tap action for "Change Password"
+                // You can navigate to a ChangePasswordScreen or show a dialog
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              title: Text(
+                'Logout',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    fontFamily: 'Kalam',
+                    fontSize: fontSize - 5,
+                  ),
+                ),
+              ),
               onTap: () {
                 // Handle Logout button press
               },

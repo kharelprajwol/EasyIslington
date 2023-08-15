@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_islington/features/discussions/models/comment.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../discussions_service.dart';
 import 'comment_card.dart';
 
@@ -83,8 +84,14 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post Details'),
-        backgroundColor: Colors.red,
+        title: Text('Post Details',
+            style: GoogleFonts.openSans(
+              textStyle: TextStyle(
+                fontFamily: 'Kalam',
+                fontSize: 25,
+              ),
+            )),
+        backgroundColor: Colors.red.shade900,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -94,6 +101,7 @@ class _PostScreenState extends State<PostScreen> {
             Text(
               widget.title,
               style: TextStyle(
+                fontFamily: 'Kalam',
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -179,7 +187,7 @@ class _PostScreenState extends State<PostScreen> {
                   },
                   child: Text('Add'),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
+                    primary: Colors.blue.shade600,
                   ),
                 ),
               ],

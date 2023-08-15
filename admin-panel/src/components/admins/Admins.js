@@ -8,6 +8,9 @@ function Admins() {
     const [newAdmin, setNewAdmin] = useState({fullName: '', email: '', username: '', password: '' });
     const [open, setOpen] = useState(false);
     const [editIndex, setEditIndex] = useState(-1);
+    const [resetPassword, setResetPassword] = useState("");
+const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+
 
     useEffect(() => {
         const fetchAdmins = async () => {
@@ -36,6 +39,19 @@ function Admins() {
     const generatePasswordForNewAdmin = () => {
         const password = "demo" + Math.floor(1000 + Math.random() * 9000);
         setNewAdmin({ ...newAdmin, password });
+    };
+
+    const handleSendEmail = async () => {
+        // Logic to send newPassword via email.
+        try {
+            // Your logic to send email goes here...
+            // Example:
+            // await sendEmailFunction(newPassword);
+    
+            console.log("Password sent via email!");
+        } catch (error) {
+            console.error("Error sending password via email:", error);
+        }
     };
 
     const handleAddAdmin = async () => {
@@ -111,12 +127,12 @@ function Admins() {
         const newPassword = "reset" + Math.floor(1000 + Math.random() * 9000);
     
         try {
-            const response = await fetch(`http://localhost:3000/admin/reset-password/${adminToReset._id}`, {
+            const response = await fetch(`http://localhost:3000/admin/reset-admin-password/${adminToReset._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ password: newPassword })
+                body: JSON.stringify({ newPassword: newPassword })
             });
     
             if (!response.ok) {
@@ -126,7 +142,8 @@ function Admins() {
             const data = await response.json();
     
             if (data && data.success) {
-                alert(`Password for ${adminToReset.username} has been reset to ${newPassword}`);
+                setResetPassword(newPassword);
+                setShowResetPasswordModal(true);
             } else {
                 console.error(data.message || 'Error resetting password.');
             }
@@ -212,12 +229,22 @@ function Admins() {
                             </>
                         )}
                         <button onClick={editIndex !== -1 ? handleEditAdmin : handleAddAdmin}>
-                            {editIndex !== -1 ? 'Save Changes' : 'Add and Send Credentials'}
+                            {editIndex !== -1 ? 'Save Changes' : 'Add and Share Credentials'}
                         </button>
                         <button onClick={() => { setEditIndex(-1); setOpen(false); }}>Cancel</button>
                     </div>
                 </div>
             )}
+
+{showResetPasswordModal && (
+    <div className="modal-overlay">
+        <div className="modal-content">
+            <p>New password: {resetPassword}</p>
+            <button onClick={handleSendEmail}>Share</button>
+            <button onClick={() => setShowResetPasswordModal(false)}>Close</button>
+        </div>
+    </div>
+)}
 
             <table className="admins-table">
                 <thead>

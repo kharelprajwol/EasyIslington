@@ -1,3 +1,4 @@
+import 'package:easy_islington/features/class_schedule/class_schedule_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/student_provider.dart';
@@ -96,6 +97,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Profile updated successfully!")),
                   );
+                  getSchedule(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

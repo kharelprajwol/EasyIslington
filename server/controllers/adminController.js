@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const Admin = require('../models/admin');
 const Student = require('../models/student');
+const Discussion = require('../models/discussion');
 
 const SALT_ROUNDS = 10;
 
@@ -118,7 +119,7 @@ exports.editAdmin = async (req, res) => {
 };
 
 // Reset Password
-exports.resetPassword = async (req, res) => {
+exports.resetAdminPassword = async (req, res) => {
     try {
         const { adminId } = req.params;
         const { newPassword } = req.body;
@@ -206,6 +207,7 @@ exports.getStudents = async (req, res) => {
 
 exports.updateStudent = async (req, res) => {
     const { id } = req.params;
+    console.log(id);
     const { firstName, lastName, specialization, year, semester, section } = req.body;
 
     try {
@@ -225,4 +227,142 @@ exports.updateStudent = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 };
+
+// Reset Student Password
+exports.resetStudentPassword = async (req, res) => {
+    try {
+        const {studentId} = req.params; // get student ID from params
+        console.log("Student ID:", studentId);
+
+        const { newPassword } = req.body; // get new password from request body
+
+        // Find the student by their ID
+        const student = await Student.findById(studentId);
+
+        if (!student) {
+            return res.status(404).json({ success: false, message: 'Student not found!' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+        // Update the student's password
+        student.password = hashedPassword;
+
+        // Save the updated student information
+        await student.save();
+
+        // Send success response
+        res.status(200).json({
+            success: true,
+            data: student,
+            message: 'Student password reset successfully.'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: error.message
+        });
+    }
+};
+
+exports.getTotalStudents = async (req, res) => {
+    try {
+        const studentCount = await Student.countDocuments(); // Uses the countDocuments function from mongoose
+
+        res.status(200).json({
+            success: true,
+            count: studentCount
+        });
+
+    } catch (error) {
+        console.error("Error fetching total student count:", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+};
+
+
+exports.getTotalPostCount = async (req, res) => {
+    try {
+        const discussions = await Discussion.find();
+        let totalCount = 0;
+
+        discussions.forEach(discussion => {
+            // Check if the discussion has posts
+            if (discussion.posts && discussion.posts.length > 0) {
+                totalCount += discussion.posts.length;
+            }
+        });
+
+        res.status(200).json({ count: totalCount });
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ message: 'Failed to retrieve post count', error });
+    }
+};
+
+// Change Admin Password without verifying old password
+exports.changeAdminPassword = async (req, res) => {
+    try {
+        const { adminId } = req.params; // Get the admin's ID from the request parameters
+        const { newPassword } = req.body; // Get the new password from the request body
+        
+        if (!newPassword || newPassword.trim().length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'New password is missing or empty.'
+            });
+        }
+
+        console.log(`Changing password for adminId: ${adminId}`);
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+        // Find the admin by their ID and update their password
+        const admin = await Admin.findByIdAndUpdate(adminId, { password: hashedPassword }, { new: true });
+
+        if (!admin) {
+            return res.status(404).json({
+                success: false,
+                message: 'Admin not found.'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Admin password changed successfully.'
+        });
+    } catch (error) {
+        if (error.kind === 'ObjectId') { // This checks for invalid MongoDB ObjectID format
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid admin ID format.',
+                error: error.message
+            });
+        }
+
+        console.error('Error in changeAdminPassword:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: error.message
+        });
+    }
+};
+
+
+
+
+
+
+
+
+
+
 

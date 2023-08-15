@@ -8,6 +8,7 @@ function Sidebar({ onSelection }) {
   return (
       <div className="sidebar">
           <ul>
+          <li onClick={() => onSelection('dashboard')}><a href="#">Dashboard</a></li>
               <li onClick={() => onSelection('students')}><a href="#">Students</a></li>
               <li onClick={() => onSelection('admins')}><a href="#">Admins</a></li>
               <li onClick={() => onSelection('schedules')}><a href="#">Schedules</a></li>
