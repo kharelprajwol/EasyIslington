@@ -23,6 +23,9 @@ class _ModuleScreenState extends State<ModuleScreen> {
   TextEditingController _editModuleController = TextEditingController();
   TextEditingController _editWeightController = TextEditingController();
 
+  double targetPercentage = 0.0;
+  TextEditingController _targetPercentageController = TextEditingController();
+
   bool isValidCredit(int credit) {
     return credit == 15 || credit == 30 || credit == 60;
   }
@@ -30,8 +33,14 @@ class _ModuleScreenState extends State<ModuleScreen> {
   void _addModule(String module, int credit) {
     final gradeHubProvider =
         Provider.of<GradeHubProvider>(context, listen: false);
-    final newModule =
-        Module(id: '', name: module, credit: credit, assessments: []);
+    final newModule = Module(
+        id: '',
+        name: module,
+        credit: credit,
+        target: 0,
+        average: 0,
+        required: 0,
+        assessments: []);
     gradeHubProvider.addModuleForYear(widget.year, newModule);
 
     _addModuleController.clear();
@@ -53,6 +62,54 @@ class _ModuleScreenState extends State<ModuleScreen> {
 
     _editModuleController.clear();
     _editWeightController.clear();
+  }
+
+  void _updateTargetPercentage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Set Target Percentage'),
+          content: TextField(
+            controller: _targetPercentageController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: 'Enter Target %',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () {
+                setState(() {
+                  targetPercentage =
+                      double.parse(_targetPercentageController.text);
+                });
+                _targetPercentageController.clear();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  double getAchieved(GradeHubProvider gradeHubProvider) {
+    // Assuming you have a method for calculating the module average
+    //return gradeHubProvider.calculateModuleAverage(widget.year);
+    return 0.0;
+  }
+
+  double getRequired(GradeHubProvider gradeHubProvider) {
+    double achieved = getAchieved(gradeHubProvider);
+    return targetPercentage - achieved;
   }
 
   @override
@@ -145,6 +202,32 @@ class _ModuleScreenState extends State<ModuleScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Target: ${targetPercentage.toStringAsFixed(1)} %",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 10.0),
+                        if (targetPercentage == 0.0)
+                          ElevatedButton(
+                            onPressed: _updateTargetPercentage,
+                            child: Text('Add'),
+                          )
+                        else
+                          ElevatedButton(
+                            onPressed: _updateTargetPercentage,
+                            child: Text('Edit'),
+                          ),
+                      ],
+                    ),
+                  ),
                   // Add Module Row
                   Row(
                     children: [
@@ -199,6 +282,35 @@ class _ModuleScreenState extends State<ModuleScreen> {
                     return _buildModuleCard(
                         module, moduleAverage, gradeHubProvider);
                   }),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Consumer<GradeHubProvider>(
+                      builder: (context, gradeHubProvider, _) {
+                        double achieved = getAchieved(gradeHubProvider);
+                        double required = getRequired(gradeHubProvider);
+
+                        return Column(
+                          children: [
+                            Text(
+                              "Achieved: ${achieved.toStringAsFixed(1)}%",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (targetPercentage != 0.0)
+                              Text(
+                                "Required: ${required.isNegative ? 0.0 : required.toStringAsFixed(1)}%",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  )
                 ],
               );
             },

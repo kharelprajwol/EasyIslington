@@ -138,4 +138,22 @@ class GradeHubProvider with ChangeNotifier {
       }
     }
   }
+
+  void updateTargetForModule(
+      String yearName, String moduleName, int newTarget) {
+    final yearIndex = _years.indexWhere((year) => year.year == yearName);
+
+    if (yearIndex != -1) {
+      // Find the module within the year using the module name
+      final moduleIndex = _years[yearIndex]
+          .modules
+          .indexWhere((module) => module.name == moduleName);
+
+      if (moduleIndex != -1) {
+        // Update the module's target
+        _years[yearIndex].modules[moduleIndex].target = newTarget;
+        notifyListeners(); // Notify listeners of the change
+      }
+    }
+  }
 }

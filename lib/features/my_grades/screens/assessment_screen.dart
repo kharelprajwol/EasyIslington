@@ -16,6 +16,9 @@ class AssessmentScreen extends StatefulWidget {
 
 class _AssessmentScreenState extends State<AssessmentScreen> {
   List<Assessment> assessments = [];
+  int target = 0;
+  int average = 0;
+  int required = 0;
 
   TextEditingController _addAssessmentController = TextEditingController();
   TextEditingController _addMarkController = TextEditingController();
@@ -23,19 +26,20 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   TextEditingController _editAssessmentController = TextEditingController();
   TextEditingController _editWeightController = TextEditingController();
   TextEditingController _editMarkController = TextEditingController();
+  TextEditingController _targetPercentageController = TextEditingController();
 
   void _addAssessment(
       String assessmentName, int assessmentMark, int assessmentWeight) {
     final gradeHubProvider =
         Provider.of<GradeHubProvider>(context, listen: false);
     final newAssessment = Assessment(
-        id: '',
-        name: assessmentName,
-        weight: assessmentWeight,
-        mark: assessmentMark);
+      id: '',
+      name: assessmentName,
+      weight: assessmentWeight,
+      mark: assessmentMark,
+    );
     gradeHubProvider.addAssessmentForModule(
         widget.year, widget.module, newAssessment);
-
     _addAssessmentController.clear();
     _addMarkController.clear();
     _addWeightController.clear();
@@ -49,9 +53,61 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
         year, moduleName, assessmentName);
   }
 
+  void _updateTargetPercentage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: TextField(
+            controller: _targetPercentageController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: 'Enter Target',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () {
+                final gradeHubProvider =
+                    Provider.of<GradeHubProvider>(context, listen: false);
+                gradeHubProvider.updateTargetForModule(widget.year,
+                    widget.module, int.parse(_targetPercentageController.text));
+                setState(() {
+                  target = int.parse(_targetPercentageController.text);
+                });
+
+                _targetPercentageController.clear();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  int getAchieved(GradeHubProvider gradeHubProvider) {
+    int moduleAverage = gradeHubProvider
+        .calculateModuleAverage(widget.year, widget.module)
+        .round();
+
+    return moduleAverage;
+  }
+
+  int getRequired(GradeHubProvider gradeHubProvider) {
+    int average = getAchieved(gradeHubProvider);
+    return target - average;
+  }
+
   @override
   void initState() {
-    print('hello');
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       final gradeHubProvider =
@@ -64,6 +120,9 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
             .firstWhere((module) => module.name == widget.module);
         if (moduleData != null) {
           setState(() {
+            target = moduleData.target;
+            average = moduleData.average;
+            required = moduleData.required;
             assessments = moduleData.assessments;
           });
         }
@@ -87,6 +146,32 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Target: ${target.toStringAsFixed(1)}",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
+                      if (target == 0.0)
+                        ElevatedButton(
+                          onPressed: _updateTargetPercentage,
+                          child: Text('Add'),
+                        )
+                      else
+                        ElevatedButton(
+                          onPressed: _updateTargetPercentage,
+                          child: Text('Edit'),
+                        ),
+                    ],
+                  ),
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -204,6 +289,35 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                         ],
                       ),
                     )),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Consumer<GradeHubProvider>(
+                    builder: (context, gradeHubProvider, _) {
+                      int average = getAchieved(gradeHubProvider);
+                      int required = getRequired(gradeHubProvider);
+
+                      return Column(
+                        children: [
+                          Text(
+                            "Weighted Average: ${average.toStringAsFixed(1)}",
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (target != 0)
+                            Text(
+                              "Required: ${required.isNegative ? 0.0 : required.toStringAsFixed(1)}",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                )
               ],
             );
           }),
